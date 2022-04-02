@@ -132,9 +132,7 @@ jobs:
       # Install dependencies
       - ruby/bundle-install
       - run: bundle clean --force
-      - run:
-        - cd tmp/starter_template
-        - bundle exec rake bt:link
+      - run: "cd tmp/starter_template && bundle exec rake bt:link"
       - run: yarn install
       - run: yarn build
       - run: yarn build:css
