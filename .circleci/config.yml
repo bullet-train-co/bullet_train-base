@@ -75,7 +75,7 @@ jobs:
     steps:
       - browser-tools/install-browser-tools
       - checkout
-      - run: "git checkout https://github.com/bullet-train-co/bullet_train.git tmp/starter_template"
+      - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter_template"
       - run: cd tmp/starter_template
       - restore_cache: *restore_bundler_cache
       - restore_cache: *restore_yarn_cache
@@ -123,7 +123,7 @@ jobs:
     steps:
       - browser-tools/install-browser-tools
       - checkout
-      - run: "git checkout https://github.com/bullet-train-co/bullet_train.git tmp/starter_template"
+      - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter_template"
       - run: cd tmp/starter_template
 
       # Restore dependency caches
