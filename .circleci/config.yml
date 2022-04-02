@@ -98,6 +98,7 @@ jobs:
       - run:
           name: Run tests with Knapsack Pro
           command: |
+            cd tmp/starter
             export RAILS_ENV=test
             bundle exec rails "knapsack_pro:queue:minitest[--verbose]"
           environment:
