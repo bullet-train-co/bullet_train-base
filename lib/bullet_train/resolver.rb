@@ -13,22 +13,20 @@ module BulletTrain
       source_file = calculate_source_file_details
 
       if source_file[:absolute_path]
+        puts ""
         if source_file[:package_name].present?
-          puts ""
           puts "Absolute path:".green
           puts "  #{source_file[:absolute_path]}".green
           puts ""
           puts "Package name:".green
           puts "  #{source_file[:package_name]}".green
-          puts ""
         else
-          puts ""
           puts "Project path:".green
           puts "  #{source_file[:project_path]}".green
           puts ""
           puts "Note: If this file was previously ejected from a package, we can no longer see which package it came from. However, it should say at the top of the file where it was ejected from.".yellow
-          puts ""
         end
+        puts ""
 
         if interactive && !eject
           puts "\nWould you like to eject the file into the local project? (y/n)\n"
