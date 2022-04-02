@@ -79,14 +79,14 @@ jobs:
 
       - run:
           name: Link starter repository to the Ruby gem being tested.
-          command: "echo \"gem 'bullet_train', path: '../..'\" > tmp/starter/Gemfile"
+          command: "echo \"gem 'bullet_train', path: '../..'\" >> tmp/starter/Gemfile"
 
       # TODO Figure out how to make these work for `tmp/starter`
       # - restore_cache: *restore_bundler_cache
       # - restore_cache: *restore_yarn_cache
 
       # Install dependencies
-      - run: "cd tmp/starter && cat ./Gemfile && bundle install"
+      - run: "cd tmp/starter && bundle install"
       - run: "cd tmp/starter && bundle clean --force"
       - run: "cd tmp/starter && bundle exec rake bt:link"
       - run: "cd tmp/starter && yarn install"
