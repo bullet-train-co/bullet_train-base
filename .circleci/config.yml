@@ -48,13 +48,14 @@ jobs:
       - checkout
 
       # TODO Figure out how to make these work for `tmp/starter`
+      # # Restore dependency caches
       # - restore_cache: *restore_bundler_cache
       # - restore_cache: *restore_yarn_cache
 
       # Install dependencies
-      - run: "cd tmp/starter && bundle install"
-      - run: "cd tmp/starter && bundle clean --force"
-      - run: "cd tmp/starter && yarn install"
+      - ruby/bundle-install
+      - run: bundle clean --force
+      - run: yarn install
 
       # # Save dependency caches
       # # We only do this as part of this job, because it's time consuming and we don't want it to slow down test runners.
@@ -63,7 +64,7 @@ jobs:
 
       - run:
           name: Check Standard Ruby
-          command: "cd tmp/starter && bundle exec standardrb"
+          command: bundle exec standardrb
 
   'Minitest':
     docker:
