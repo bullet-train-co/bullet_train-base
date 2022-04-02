@@ -75,28 +75,31 @@ jobs:
     steps:
       - browser-tools/install-browser-tools
       - checkout
-      - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter_template"
-      - run: cd tmp/starter_template
+      - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter"
       - restore_cache: *restore_bundler_cache
       - restore_cache: *restore_yarn_cache
 
       # Install dependencies
-      - ruby/bundle-install
-      - run: bundle clean --force
-      - run: bundle exec rake bt:link
-      - run: yarn install
-      - run: yarn build
-      - run: yarn build:css
+      - run: "cd tmp/starter && bundle install"
+      - run: "cd tmp/starter && bundle clean --force"
+      - run: "cd tmp/starter && bundle exec rake bt:link"
+      - run: "cd tmp/starter && yarn install"
+      - run: "cd tmp/starter && yarn build"
+      - run: "cd tmp/starter && yarn build:css"
+
+      - run:
+          name: Run unit tests
+          command: "cd tmp/starter && bundle exec rails test"
 
       - *wait_for_docker
 
-      - run:
-          name: Run tests with Knapsack Pro
-          command: |
-            export RAILS_ENV=test
-            bundle exec rails "knapsack_pro:queue:minitest[--verbose]"
-          environment:
-            KNAPSACK_PRO_CI_NODE_TOTAL: 16
+      # - run:
+      #     name: Run tests with Knapsack Pro
+      #     command: |
+      #       export RAILS_ENV=test
+      #       bundle exec rails "knapsack_pro:queue:minitest[--verbose]"
+      #     environment:
+      #       KNAPSACK_PRO_CI_NODE_TOTAL: 16
 
       # If you don't want to use Knapsack Pro, then use this configuration:
       #
@@ -123,19 +126,19 @@ jobs:
     steps:
       - browser-tools/install-browser-tools
       - checkout
-      - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter_template"
+      - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter"
 
       # Restore dependency caches
       - restore_cache: *restore_bundler_cache
       - restore_cache: *restore_yarn_cache
 
       # Install dependencies
-      - ruby/bundle-install
-      - run: bundle clean --force
-      - run: "cd tmp/starter_template && bundle exec rake bt:link"
-      - run: yarn install
-      - run: yarn build
-      - run: yarn build:css
+      - run: "cd tmp/starter && bundle install"
+      - run: "cd tmp/starter && bundle clean --force"
+      - run: "cd tmp/starter && bundle exec rake bt:link"
+      - run: "cd tmp/starter && yarn install"
+      - run: "cd tmp/starter && yarn build"
+      - run: "cd tmp/starter && yarn build:css"
 
       - *wait_for_docker
 
@@ -150,6 +153,6 @@ workflows:
   version: 2
   build:
     jobs:
-      - 'Standard Ruby'
+      # - 'Standard Ruby'
       - 'Minitest'
-      - 'Minitest for Super Scaffolding'
+      # - 'Minitest for Super Scaffolding'
