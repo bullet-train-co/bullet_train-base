@@ -47,23 +47,23 @@ jobs:
     steps:
       - checkout
 
-      # Restore dependency caches
-      - restore_cache: *restore_bundler_cache
-      - restore_cache: *restore_yarn_cache
+      # TODO Figure out how to make these work for `tmp/starter`
+      # - restore_cache: *restore_bundler_cache
+      # - restore_cache: *restore_yarn_cache
 
       # Install dependencies
-      - ruby/bundle-install
-      - run: bundle clean --force
-      - run: yarn install
+      - run: "cd tmp/starter && bundle install"
+      - run: "cd tmp/starter && bundle clean --force"
+      - run: "cd tmp/starter && yarn install"
 
-      # Save dependency caches
-      # We only do this as part of this job, because it's time consuming and we don't want it to slow down test runners.
-      - save_cache: *save_bundle_cache
-      - save_cache: *save_yarn_cache
+      # # Save dependency caches
+      # # We only do this as part of this job, because it's time consuming and we don't want it to slow down test runners.
+      # - save_cache: *save_bundle_cache
+      # - save_cache: *save_yarn_cache
 
       - run:
           name: Check Standard Ruby
-          command: bundle exec standardrb
+          command: "cd tmp/starter && bundle exec standardrb"
 
   'Minitest':
     docker:
@@ -131,6 +131,10 @@ jobs:
       - checkout
       - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter"
 
+      - run:
+          name: Link starter repository to the Ruby gem being tested.
+          command: "grep -v 'gem \"bullet_train\"' tmp/starter/Gemfile > tmp/starter/Gemfile.tmp && mv tmp/starter/Gemfile.tmp tmp/starter/Gemfile && echo 'gem \"bullet_train\", path: \"../..\"' >> tmp/starter/Gemfile"
+
       # TODO Figure out how to make these work for `tmp/starter`
       # # Restore dependency caches
       # - restore_cache: *restore_bundler_cache
@@ -148,15 +152,15 @@ jobs:
 
       - run:
           name: 'Setup Super Scaffolding System Test'
-          command: bundle exec test/bin/setup-super-scaffolding-system-test
+          command: "cd tmp/starter && bundle exec test/bin/setup-super-scaffolding-system-test"
       - run:
           name: 'Run Super Scaffolding Test'
-          command: bundle exec rails test test/system/super_scaffolding_test.rb
+          command: "cd tmp/starter && bundle exec rails test test/system/super_scaffolding_test.rb"
 
 workflows:
   version: 2
   build:
     jobs:
-      # - 'Standard Ruby'
+      - 'Standard Ruby'
       - 'Minitest'
-      # - 'Minitest for Super Scaffolding'
+      - 'Minitest for Super Scaffolding'
