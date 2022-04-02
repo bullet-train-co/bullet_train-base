@@ -127,10 +127,14 @@ jobs:
       - browser-tools/install-browser-tools
       - checkout
       - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter"
+      - run:
+        name: "Link starter repository to the gem we're testing."
+        command: "echo \"gem \\\"bullet_train\\\", path: \\\"../..\\\"\" > tmp/starter/Gemfile"
 
-      # Restore dependency caches
-      - restore_cache: *restore_bundler_cache
-      - restore_cache: *restore_yarn_cache
+      # TODO Figure out how to make these work for `tmp/starter`
+      # # Restore dependency caches
+      # - restore_cache: *restore_bundler_cache
+      # - restore_cache: *restore_yarn_cache
 
       # Install dependencies
       - run: "cd tmp/starter && bundle install"
