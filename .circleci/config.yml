@@ -133,9 +133,6 @@ jobs:
       - browser-tools/install-browser-tools
       - checkout
       - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter"
-      - run:
-        name: "Link starter repository to the gem we're testing."
-        command: "echo \"gem \\\"bullet_train\\\", path: \\\"../..\\\"\" > tmp/starter/Gemfile"
 
       # TODO Figure out how to make these work for `tmp/starter`
       # # Restore dependency caches
