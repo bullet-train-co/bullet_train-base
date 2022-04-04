@@ -15,7 +15,7 @@ If you're using Bullet Train for the first time, begin by learning these five im
     bin/super-scaffold crud Project Team name:text_field
     ```
 
-    In this example, `Team` refers to the immediate parent of the `Project` resource. For more details, just run `bin/super-scaffold` or [read the documentation](https://github.com/bullet-train-co/bullet_train-base/blob/main/docs/super-scaffolding.md).
+    In this example, `Team` refers to the immediate parent of the `Project` resource. For more details, just run `bin/super-scaffold` or [read the documentation](/docs/super-scaffolding.md).
 
 2. Use `rails g migration` and `bin/super-scaffold` to add a new field to a model you've already scaffolded:
 
@@ -24,7 +24,7 @@ If you're using Bullet Train for the first time, begin by learning these five im
     bin/super-scaffold crud-field Project description:trix_editor
     ```
 
-    These first two points about Super Scaffolding are just the tip of the iceberg, so be sure to circle around and [read the full documentation](https://github.com/bullet-train-co/bullet_train-base/blob/main/docs/super-scaffolding.md).
+    These first two points about Super Scaffolding are just the tip of the iceberg, so be sure to circle around and [read the full documentation](/docs/super-scaffolding.md).
 
 3. Figure out which ERB views are powering something you see in the UI by:
 
