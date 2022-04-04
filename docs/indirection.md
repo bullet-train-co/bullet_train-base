@@ -27,7 +27,7 @@ Even in vanilla Rails development, when you're looking at a view file, the path 
 `bin/resolve` makes it easy to figure out where where a partial is being served from:
 
 ```
-$ bin/resolve shared/box
+bin/resolve shared/box
 ```
 
 ### Exposing Rendered Views with Annotated Views
@@ -57,5 +57,5 @@ You can also log all the translation key for anything being rendered to the cons
 Once you have the full I18N translation key, you can use `bin/resolve` to figure out which package and file it's coming from. At that point, if you need to customize it, you can also use the `--eject` option to copy the  the framework for customization in your local application:
 
 ```
-$ bin/resolve en.account.onboarding.user_details.edit.header --eject --open
+bin/resolve en.account.onboarding.user_details.edit.header --eject --open
 ```
