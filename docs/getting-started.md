@@ -30,7 +30,7 @@ If you're using Bullet Train for the first time, begin by learning these five im
 
     - Right clicking the element.
     - Selecting "Inspect Element".
-    - Looking for the `<!--XRAY START ...-->` comment above the element you've selected.
+    - Looking for the `<!-- BEGIN ... -->` comment above the element you've selected.
 
 4. Figure out the full I18N translation key of any string on the page by adding `?show_locales=true` to the URL.
 
@@ -51,5 +51,5 @@ If you're using Bullet Train for the first time, begin by learning these five im
     And then paste any input, e.g.:
 
     ```
-    <!--XRAY START 73 /Users/andrewculver/.rbenv/versions/3.1.1/lib/ruby/gems/3.1.0/gems/bullet_train-themes-light-1.0.10/app/views/themes/light/commentary/_box.html.erb-->
+    <!-- BEGIN /Users/andrewculver/.rbenv/versions/3.1.1/lib/ruby/gems/3.1.0/gems/bullet_train-themes-light-1.0.10/app/views/themes/light/commentary/_box.html.erb -->
     ```
