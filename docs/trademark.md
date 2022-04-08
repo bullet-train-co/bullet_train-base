@@ -8,10 +8,10 @@ It's also important when you're building packages or presenting offerings in the
 
 Here are some examples of names we would not typically object to:
 
- - "Super Widget _for Bullet Train_"
- - "MySQL Starter Kit _for Bullet Train_"
- - "_BT_ Starter Kit with MySQL"
- - "_BT_ Pro Tools"
+ - "Super Widget __for Bullet Train__"
+ - "MySQL Starter Kit __for Bullet Train__"
+ - "__BT__ Starter Kit with MySQL"
+ - "__BT__ Pro Tools"
 
 Here are some examples that would require explicit permission:
 
