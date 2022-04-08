@@ -140,8 +140,6 @@ module BulletTrain
       # We don't have to do anything here... the absolute path is what we're passed, and we just pass it back.
       if @needle[0] == "/"
         @needle
-      else
-        nil
       end
     end
 
