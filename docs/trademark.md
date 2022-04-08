@@ -22,4 +22,4 @@ Here are some examples that would require explicit permission:
  - "Bullet Train Conference"
  - "Bullet Train Podcast"
 
-If you've got an idea and aren't sure about the name, message Andrew Culver privately [on Discord](https://discord.gg/bullettrain) or [via Twitter DM](https://twitter.com/andrewculver). We're required to enforce our policies. Thanks for understanding! 🙏
+If you've got an idea and aren't sure about the name, message Andrew Culver privately [on Discord](https://discord.gg/bullettrain) or [via Twitter DM](https://twitter.com/andrewculver). If you know anything about trademarks, you know we're required to enforce our policies. Thanks for understanding! 🙏
