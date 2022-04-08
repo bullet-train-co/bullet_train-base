@@ -22,6 +22,6 @@ Here are some examples that would require explicit permission:
  - "Bullet Train Conference"
  - "Bullet Train Podcast"
 
-If you've got an idea and aren't sure about the name, message Andrew Culver directly [on Discord](https://discord.gg/bullettrain) or [via Twitter DM](https://twitter.com/andrewculver).
+If you've got an idea and aren't sure about the name, message Andrew Culver privately [on Discord](https://discord.gg/bullettrain) or [via Twitter DM](https://twitter.com/andrewculver).
 
 We're required by law to enforce our policies, otherwise we risk losing the rights granted to us by our registered trademark. Thanks for understanding! 🙏
