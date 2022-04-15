@@ -98,7 +98,7 @@ def two_factor_authentication_enabled?
 end
 
 # Don't redefine this if an application redefines it locally.
-unless defined?(:any_oauth_enabled?)
+unless defined?(any_oauth_enabled?)
   def any_oauth_enabled?
     [
       stripe_enabled?,
