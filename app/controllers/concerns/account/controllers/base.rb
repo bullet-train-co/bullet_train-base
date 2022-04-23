@@ -24,6 +24,13 @@ module Account::Controllers::Base
     end
   end
 
+  # We overwrite controller instance variables here to set pagination for Super Scaffolded models.
+  def set_pagy(collection_symbol, controller, options = {}, query = :all)
+    collection = current_team.send(collection_symbol).send(query)
+    @pagy, pagy_collection = pagy(collection, options)
+    controller.instance_variable_set("@#{collection_symbol}", pagy_collection)
+  end
+
   def adding_user_email?
     is_a?(Account::Onboarding::UserEmailController)
   end
