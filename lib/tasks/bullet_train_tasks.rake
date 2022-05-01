@@ -161,9 +161,11 @@ namespace :bullet_train do
       # TODO Prompt whether they want to check out their own forked version of the repository.
 
       if File.exist?("local/#{gem}")
-        # TODO Add more help for figuring out whether it's currently linked, or just left over and needs clean up.
         puts "Can't clone into `local/#{gem}` because it already exists."
         puts "However, we will try to use what's already there."
+
+        # TODO We should check whether the local copy is in a clean state, and if it is, check out `main`.
+        # TODO We should also pull `origin/main` to make sure we're on the most up-to-date version of the package.
       else
         stream "git clone #{details[:git]} local/#{gem}"
       end
@@ -174,15 +176,15 @@ namespace :bullet_train do
       if `cat Gemfile | grep "gem \\\"#{gem}\\\","`.chomp.present?
         puts "This gem already has some sort of alternative source configured in the `Gemfile`."
         puts "We can't do anything with this. Sorry!"
-      elsif `cat Gemfile | grep "gem \\\"#{gem}\\\"`.chomp.present?
+      elsif `cat Gemfile | grep "gem \\\"#{gem}\\\""`.chomp.present?
         puts "This gem is directly present in the `Gemfile`, so we'll update that line."
 
         text = File.read("Gemfile")
         new_contents = text.gsub(/gem \"#{gem}\"/, "gem \"#{gem}\", path: \"local/#{gem}\"")
-        File.open(file_name, "w") { |file| file.puts new_contents }
+        File.open("Gemfile", "w") { |file| file.puts new_contents }
       else
         puts "This gem isn't directly present in the `Gemfile`, so we'll add it temporarily."
-        File.open(file_name, "a+") { |file| file.puts "gem \"#{gem}\", path: \"local/#{gem}\" # Added by \`bin/develop\`." }
+        File.open("Gemfile", "a+") { |file| file.puts; file.puts "gem \"#{gem}\", path: \"local/#{gem}\" # Added by \`bin/develop\`." }
       end
 
       puts "Now we'll run `bundle install`."
@@ -190,6 +192,9 @@ namespace :bullet_train do
 
       puts "We'll restart any running Rails server now."
       stream "rails restart"
+
+      puts "OK, we're opening that package in your IDE, `#{ENV['IDE'] || 'code'}`. (You can configure this with `export IDE=whatever`.)"
+      `#{ENV['IDE'] || 'code'} local/#{gem}`
 
       if details[:npm]
         puts "This package also has an npm package, so we'll link that up as well."
@@ -203,8 +208,9 @@ namespace :bullet_train do
         $stdin.gets
       end
 
-      puts "OK, clean up should happen here."
-      # TODO Warn them about the `local/#{gem}` folder getting destroyed.
+      puts "OK, here's a list of things this script still doesn't do you for you:"
+      puts "1. It doesn't clean up the repository that was cloned into `local`."
+      puts "2. Unless you remove it, it won't update that repository the next time you link to it."
     else
       puts "Invalid option, \"#{number}\". Try again."
     end
