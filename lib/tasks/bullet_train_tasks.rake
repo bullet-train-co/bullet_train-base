@@ -70,7 +70,7 @@ namespace :bullet_train do
           end
         end
       rescue UncaughtThrowError
-        puts "Received a <Control + C>. Exiting the child process."
+        puts "Received a <Control + C>. Exiting the child process.".blue
       end
 
       puts ""
@@ -140,13 +140,13 @@ namespace :bullet_train do
       },
     }
 
-    puts "Which framework package do you want to work on?"
+    puts "Which framework package do you want to work on?".blue
     puts ""
     framework_packages.each do |gem, details|
-      puts "  #{framework_packages.keys.find_index(gem) + 1}. #{gem}"
+      puts "  #{framework_packages.keys.find_index(gem) + 1}. #{gem}".blue
     end
     puts ""
-    puts "Enter a number below and hit <Enter>:"
+    puts "Enter a number below and hit <Enter>:".blue
     number = $stdin.gets.chomp
 
     gem = framework_packages.keys[number.to_i - 1]
@@ -154,15 +154,17 @@ namespace :bullet_train do
     if gem
       details = framework_packages[gem]
 
-      puts "OK! Let's work on `#{gem}` together!"
+      puts "OK! Let's work on `#{gem}` together!".green
       puts ""
-      puts "First, we're going to clone a copy of the package repository."
+      puts "First, we're going to clone a copy of the package repository.".blue
 
       # TODO Prompt whether they want to check out their own forked version of the repository.
 
       if File.exist?("local/#{gem}")
-        puts "Can't clone into `local/#{gem}` because it already exists."
-        puts "However, we will try to use what's already there."
+        puts "Can't clone into `local/#{gem}` because it already exists. We will try to use what's already there.".yellow
+        puts "However, it will be up to you to make sure that working copy of the repository is in a clean state and checked out to the `main` branch or whatever you want to work on.".yellow
+        puts "Hit <Enter> to continue.".blue
+        $stdin.gets
 
         # TODO We should check whether the local copy is in a clean state, and if it is, check out `main`.
         # TODO We should also pull `origin/main` to make sure we're on the most up-to-date version of the package.
@@ -172,47 +174,57 @@ namespace :bullet_train do
 
       # TODO Ask them whether they want to check out a specific branch to work on. (List available remote branches.)
 
-      puts "Now we'll try to link up that repository in the `Gemfile`."
-      if `cat Gemfile | grep "gem \\\"#{gem}\\\","`.chomp.present?
-        puts "This gem already has some sort of alternative source configured in the `Gemfile`."
-        puts "We can't do anything with this. Sorry!"
+      puts ""
+      puts "Now we'll try to link up that repository in the `Gemfile`.".blue
+      if `cat Gemfile | grep "gem \\\"#{gem}\\\", path: \\\"local/#{gem}\\\""`.chomp.present?
+        puts "This gem is already linked to a checked out copy in `local` in the `Gemfile`.".green
+      elsif `cat Gemfile | grep "gem \\\"#{gem}\\\","`.chomp.present?
+        puts "This gem already has some sort of alternative source configured in the `Gemfile`.".yellow
+        puts "We can't do anything with this. Sorry! We'll proceed, but you have to link this package yourself.".red
       elsif `cat Gemfile | grep "gem \\\"#{gem}\\\""`.chomp.present?
-        puts "This gem is directly present in the `Gemfile`, so we'll update that line."
+        puts "This gem is directly present in the `Gemfile`, so we'll update that line.".green
 
         text = File.read("Gemfile")
         new_contents = text.gsub(/gem \"#{gem}\"/, "gem \"#{gem}\", path: \"local/#{gem}\"")
         File.open("Gemfile", "w") { |file| file.puts new_contents }
       else
-        puts "This gem isn't directly present in the `Gemfile`, so we'll add it temporarily."
+        puts "This gem isn't directly present in the `Gemfile`, so we'll add it temporarily.".green
         File.open("Gemfile", "a+") { |file| file.puts; file.puts "gem \"#{gem}\", path: \"local/#{gem}\" # Added by \`bin/develop\`." }
       end
 
-      puts "Now we'll run `bundle install`."
+      puts ""
+      puts "Now we'll run `bundle install`.".blue
       stream "bundle install"
 
-      puts "We'll restart any running Rails server now."
+      puts ""
+      puts "We'll restart any running Rails server now.".blue
       stream "rails restart"
 
-      puts "OK, we're opening that package in your IDE, `#{ENV['IDE'] || 'code'}`. (You can configure this with `export IDE=whatever`.)"
+      puts ""
+      puts "OK, we're opening that package in your IDE, `#{ENV['IDE'] || 'code'}`. (You can configure this with `export IDE=whatever`.)".blue
       `#{ENV['IDE'] || 'code'} local/#{gem}`
 
+      puts ""
       if details[:npm]
-        puts "This package also has an npm package, so we'll link that up as well."
+        puts "This package also has an npm package, so we'll link that up as well.".blue
         stream "cd local/#{gem} && yarn install && yarn link && cd ../.. && yarn link \"#{details[:npm]}\""
 
-        puts "And now we're going to watch for any changes you make to the JavaScript and recompile as we go."
-        puts "When you're done, you can hit <Control + C> and we'll clean all off this up."
+        puts ""
+        puts "And now we're going to watch for any changes you make to the JavaScript and recompile as we go.".blue
+        puts "When you're done, you can hit <Control + C> and we'll clean all off this up.".blue
         stream "cd local/#{gem} && yarn build --watch"
       else
-        puts "This package has no npm package, so we'll just hang out here and do nothing. However, when you hit <Enter> here, we'll start the process of cleaning all of this up."
+        puts "This package has no npm package, so we'll just hang out here and do nothing. However, when you hit <Enter> here, we'll start the process of cleaning all of this up.".blue
         $stdin.gets
       end
 
-      puts "OK, here's a list of things this script still doesn't do you for you:"
-      puts "1. It doesn't clean up the repository that was cloned into `local`."
-      puts "2. Unless you remove it, it won't update that repository the next time you link to it."
+      puts ""
+      puts "OK, here's a list of things this script still doesn't do you for you:".yellow
+      puts "1. It doesn't clean up the repository that was cloned into `local`.".yellow
+      puts "2. Unless you remove it, it won't update that repository the next time you link to it.".yellow
     else
-      puts "Invalid option, \"#{number}\". Try again."
+      puts ""
+      puts "Invalid option, \"#{number}\". Try again.".red
     end
   end
 end
