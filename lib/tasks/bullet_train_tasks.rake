@@ -65,7 +65,7 @@ namespace :bullet_train do
         trap("SIGINT") { throw :ctrl_c }
 
         IO.popen(command) do |io|
-          while (line = io.gets) do
+          while (line = io.gets)
             puts "#{prefix}#{line}"
           end
         end
@@ -185,11 +185,14 @@ namespace :bullet_train do
         puts "This gem is directly present in the `Gemfile`, so we'll update that line.".green
 
         text = File.read("Gemfile")
-        new_contents = text.gsub(/gem \"#{gem}\"/, "gem \"#{gem}\", path: \"local/#{gem}\"")
+        new_contents = text.gsub(/gem "#{gem}"/, "gem \"#{gem}\", path: \"local/#{gem}\"")
         File.open("Gemfile", "w") { |file| file.puts new_contents }
       else
         puts "This gem isn't directly present in the `Gemfile`, so we'll add it temporarily.".green
-        File.open("Gemfile", "a+") { |file| file.puts; file.puts "gem \"#{gem}\", path: \"local/#{gem}\" # Added by \`bin/develop\`." }
+        File.open("Gemfile", "a+") { |file|
+          file.puts
+          file.puts "gem \"#{gem}\", path: \"local/#{gem}\" # Added by \`bin/develop\`."
+        }
       end
 
       puts ""
@@ -201,8 +204,8 @@ namespace :bullet_train do
       stream "rails restart"
 
       puts ""
-      puts "OK, we're opening that package in your IDE, `#{ENV['IDE'] || 'code'}`. (You can configure this with `export IDE=whatever`.)".blue
-      `#{ENV['IDE'] || 'code'} local/#{gem}`
+      puts "OK, we're opening that package in your IDE, `#{ENV["IDE"] || "code"}`. (You can configure this with `export IDE=whatever`.)".blue
+      `#{ENV["IDE"] || "code"} local/#{gem}`
 
       puts ""
       if details[:npm]
