@@ -97,31 +97,43 @@ namespace :bullet_train do
 
       if File.exist?("local/#{gem}")
         puts "We found the repository in `local/#{gem}`. We will try to use what's already there.".yellow
+        puts ""
 
-        # Adding this flag enables us to execute git commands for local/#{gem} from our starter repo directory.
-        git_dir_flag = `--git-dir=local/#{gem}/.git`
+        # Adding these flags enables us to execute git commands in the gem from our starter repo.
+        work_tree_flag = "--work-tree=local/#{gem}"
+        git_dir_flag = "--git-dir=local/#{gem}/.git"
 
-        git_status = `git #{git_dir_flag} status`
+        git_status = `git #{work_tree_flag} #{git_dir_flag} status`
         unless git_status.match?("nothing to commit, working tree clean")
-          puts "This package currently has uncommitted changes.".yellow
-          puts "Please make sure the branch is clean and try again".yellow
+          puts "This package currently has uncommitted changes.".red
+          puts "Please make sure the branch is clean and try again.".red
           exit
         end
 
-        current_branch = (`git #{git_dir_flag} branch`).split("\n").select{|branch_name| branch_name.match?(/^\*\s/)}.pop.gsub(/^\*\s/, "")
+        current_branch = (`git #{work_tree_flag} #{git_dir_flag} branch`).split("\n").select{|branch_name| branch_name.match?(/^\*\s/)}.pop.gsub(/^\*\s/, "")
         unless current_branch == "main"
+          puts "Previously on #{current_branch}.".blue
           puts "Switching local/#{gem} to main branch.".blue
-          stream("git #{git_dir_flag} checkout main")
+          stream("git #{work_tree_flag} #{git_dir_flag} checkout main")
         end
 
         puts "Updating the main branch with the latest changes.".blue
-        stream("git #{git_dir_flag} pull origin main")
+        stream("git #{work_tree_flag} #{git_dir_flag} pull origin main")
       else
         puts "First, we're going to clone a copy of the package repository.".blue
         stream "git clone #{details[:git]} local/#{gem}"
       end
 
-      # TODO Ask them whether they want to check out a specific remote branch to work on. (List available remote branches.)
+      stream("git #{work_tree_flag} #{git_dir_flag} fetch")
+      stream("git #{work_tree_flag} #{git_dir_flag} branch -r")
+      puts "The above is a list of remote branches.".blue
+      puts "If there's one you'd like to work on, please enter the branch name and press <Enter>.".blue
+      puts "If not, just press <Enter> to continue.".blue
+      input = $stdin.gets.strip
+      unless(input.empty?)
+        puts "Switching to #{input.gsub("origin/", "")}".blue # TODO: Should we remove origin/ here if the developer types it?
+        stream("git #{work_tree_flag} #{git_dir_flag} checkout #{input}")
+      end
 
       puts ""
       puts "Now we'll try to link up that repository in the `Gemfile`.".blue
