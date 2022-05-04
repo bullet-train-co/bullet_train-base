@@ -76,69 +76,7 @@ namespace :bullet_train do
       puts ""
     end
 
-    # TODO Extract this into a YAML file.
-    framework_packages = {
-      "bullet_train" => {
-        git: "https://github.com/bullet-train-co/bullet_train-base",
-        npm: "@bullet-train/bullet-train"
-      },
-      "bullet_train-api" => {
-        git: "https://github.com/bullet-train-co/bullet_train-api",
-      },
-      "bullet_train-fields" => {
-        git: "https://github.com/bullet-train-co/bullet_train-fields",
-        npm: "@bullet-train/fields"
-      },
-      "bullet_train-has_uuid" => {
-        git: "https://github.com/bullet-train-co/bullet_train-has_uuid",
-      },
-      "bullet_train-incoming_webhooks" => {
-        git: "https://github.com/bullet-train-co/bullet_train-incoming_webhooks",
-      },
-      "bullet_train-integrations" => {
-        git: "https://github.com/bullet-train-co/bullet_train-integrations",
-      },
-      "bullet_train-integrations-stripe" => {
-        git: "https://github.com/bullet-train-co/bullet_train-base-integrations-stripe",
-      },
-      "bullet_train-obfuscates_id" => {
-        git: "https://github.com/bullet-train-co/bullet_train-obfuscates_id",
-      },
-      "bullet_train-outgoing_webhooks" => {
-        git: "https://github.com/bullet-train-co/bullet_train-outgoing_webhooks",
-      },
-      "bullet_train-outgoing_webhooks-core" => {
-        git: "https://github.com/bullet-train-co/bullet_train-outgoing_webhooks-core",
-      },
-      "bullet_train-scope_questions" => {
-        git: "https://github.com/bullet-train-co/bullet_train-scope_questions",
-      },
-      "bullet_train-scope_validator" => {
-        git: "https://github.com/bullet-train-co/bullet_train-scope_validator",
-      },
-      "bullet_train-sortable" => {
-        git: "https://github.com/bullet-train-co/bullet_train-sortable",
-        npm: "@bullet-train/bullet-train-sortable"
-      },
-      "bullet_train-super_scaffolding" => {
-        git: "https://github.com/bullet-train-co/bullet_train-super_scaffolding",
-      },
-      "bullet_train-super_load_and_authorize_resource" => {
-        git: "https://github.com/bullet-train-co/bullet_train-super_load_and_authorize_resource",
-      },
-      "bullet_train-themes" => {
-        git: "https://github.com/bullet-train-co/bullet_train-themes",
-      },
-      "bullet_train-themes-base" => {
-        git: "https://github.com/bullet-train-co/bullet_train-themes-base",
-      },
-      "bullet_train-themes-light" => {
-        git: "https://github.com/bullet-train-co/bullet_train-themes-light",
-      },
-      "bullet_train-themes-tailwind_css" => {
-        git: "https://github.com/bullet-train-co/bullet_train-themes-tailwind_css",
-      },
-    }
+    framework_packages = I18n.t("framework_packages")
 
     puts "Which framework package do you want to work on?".blue
     puts ""
@@ -156,23 +94,34 @@ namespace :bullet_train do
 
       puts "OK! Let's work on `#{gem}` together!".green
       puts ""
-      puts "First, we're going to clone a copy of the package repository.".blue
-
-      # TODO Prompt whether they want to check out their own forked version of the repository.
 
       if File.exist?("local/#{gem}")
-        puts "Can't clone into `local/#{gem}` because it already exists. We will try to use what's already there.".yellow
-        puts "However, it will be up to you to make sure that working copy of the repository is in a clean state and checked out to the `main` branch or whatever you want to work on.".yellow
-        puts "Hit <Enter> to continue.".blue
-        $stdin.gets
+        puts "We found the repository in `local/#{gem}`. We will try to use what's already there.".yellow
 
-        # TODO We should check whether the local copy is in a clean state, and if it is, check out `main`.
-        # TODO We should also pull `origin/main` to make sure we're on the most up-to-date version of the package.
+        # Adding this flag enables us to execute git commands for local/#{gem} from our starter repo directory.
+        git_dir_flag = `--git-dir=local/#{gem}/.git`
+
+        git_status = `git #{git_dir_flag} status`
+        unless git_status.match?("nothing to commit, working tree clean")
+          puts "This package currently has uncommitted changes.".yellow
+          puts "Please make sure the branch is clean and try again".yellow
+          exit
+        end
+
+        current_branch = (`git #{git_dir_flag} branch`).split("\n").select{|branch_name| branch_name.match?(/^\*\s/)}.pop.gsub(/^\*\s/, "")
+        unless current_branch == "main"
+          puts "Switching local/#{gem} to main branch.".blue
+          stream("git #{git_dir_flag} checkout main")
+        end
+
+        puts "Updating the main branch with the latest changes.".blue
+        stream("git #{git_dir_flag} pull origin main")
       else
+        puts "First, we're going to clone a copy of the package repository.".blue
         stream "git clone #{details[:git]} local/#{gem}"
       end
 
-      # TODO Ask them whether they want to check out a specific branch to work on. (List available remote branches.)
+      # TODO Ask them whether they want to check out a specific remote branch to work on. (List available remote branches.)
 
       puts ""
       puts "Now we'll try to link up that repository in the `Gemfile`.".blue
