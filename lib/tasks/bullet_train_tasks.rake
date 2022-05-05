@@ -110,7 +110,7 @@ namespace :bullet_train do
           exit
         end
 
-        current_branch = (`git #{work_tree_flag} #{git_dir_flag} branch`).split("\n").select{|branch_name| branch_name.match?(/^\*\s/)}.pop.gsub(/^\*\s/, "")
+        current_branch = (`git #{work_tree_flag} #{git_dir_flag} branch`).split("\n").select { |branch_name| branch_name.match?(/^\*\s/) }.pop.gsub(/^\*\s/, "")
         unless current_branch == "main"
           puts "Previously on #{current_branch}.".blue
           puts "Switching local/#{gem} to main branch.".blue
@@ -130,7 +130,7 @@ namespace :bullet_train do
       puts "If there's one you'd like to work on, please enter the branch name and press <Enter>.".blue
       puts "If not, just press <Enter> to continue.".blue
       input = $stdin.gets.strip
-      unless(input.empty?)
+      unless input.empty?
         puts "Switching to #{input.gsub("origin/", "")}".blue # TODO: Should we remove origin/ here if the developer types it?
         stream("git #{work_tree_flag} #{git_dir_flag} checkout #{input}")
       end
