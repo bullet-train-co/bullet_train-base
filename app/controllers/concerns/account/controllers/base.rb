@@ -24,20 +24,6 @@ module Account::Controllers::Base
     end
   end
 
-  # We overwrite controller instance variables here to set pagination for Super Scaffolded models.
-  def set_pagy(collection_symbol, controller, options = {}, query = :all)
-    collection = if collection_symbol == :tangible_things
-      creative_concept = Scaffolding::AbsolutelyAbstract::CreativeConcept.find_by_obfuscated_id(
-        params[:absolutely_abstract_creative_concept_id]
-      )
-      creative_concept.completely_concrete_tangible_things
-    else
-      current_team.send(collection_symbol).send(query)
-    end
-    @pagy, pagy_collection = pagy(collection, options)
-    controller.instance_variable_set("@#{collection_symbol}", pagy_collection)
-  end
-
   def adding_user_email?
     is_a?(Account::Onboarding::UserEmailController)
   end
