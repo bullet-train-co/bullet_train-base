@@ -122,7 +122,3 @@ end
 def multiple_locales?
   @multiple_locales ||= I18n.available_locales.many?
 end
-
-def pagy_enabled?
-  ENV["PAGY"].present?
-end
