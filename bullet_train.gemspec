@@ -22,12 +22,23 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib,docs}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
+  spec.post_install_message = <<-MESSAGE
+    If you're upgrading `bullet_train-*` Ruby gems and you run into any new
+    issues, you should probably also pull in updates from the Bullet Train
+    starter repository into your local application, just to make sure
+    everything is synced up. See https://bullettrain.co/docs/upgrades for
+    details.
+  MESSAGE
+
+  spec.add_development_dependency "standard"
+
   spec.add_dependency "rails", ">= 6.0.0"
   spec.add_dependency "bullet_train-fields"
   spec.add_dependency "bullet_train-roles"
   spec.add_dependency "bullet_train-super_load_and_authorize_resource"
   spec.add_dependency "bullet_train-has_uuid"
   spec.add_dependency "bullet_train-scope_validator"
+  spec.add_dependency "bullet_train-themes"
   spec.add_dependency "devise"
 
   # This has been broken since Rails 7.
@@ -56,7 +67,7 @@ Gem::Specification.new do |spec|
 
   # Reactive view magic.
   # The `updates_for` feature replaces Bullet Train's earlier "Cable Collections" feature.
-  spec.add_dependency "cable_ready", "5.0.0.pre8"
+  spec.add_dependency "cable_ready", "5.0.0.pre9"
   spec.add_dependency "hiredis"
 
   # Add named slots to regular Rails partials.
@@ -80,4 +91,10 @@ Gem::Specification.new do |spec|
   # We don't want to develop in a world where we don't have `binding.pry` or `object.pry` for debugging.
   spec.add_development_dependency "pry"
   spec.add_development_dependency "pry-stack_explorer"
+
+  # Conversations.
+  spec.add_runtime_dependency "unicode-emoji"
+  
+  # Pagination.
+  spec.add_runtime_dependency "pagy"
 end
