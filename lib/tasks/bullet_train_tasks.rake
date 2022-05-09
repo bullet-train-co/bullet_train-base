@@ -120,8 +120,7 @@ namespace :bullet_train do
         puts "Updating the main branch with the latest changes.".blue
         stream("git #{work_tree_flag} #{git_dir_flag} pull origin main")
       else
-        puts "First, we're going to clone a copy of the package repository.".blue
-        stream "git clone #{details[:git]} local/#{gem}"
+        stream "git clone git@github.com:#{details[:git]}.git local/#{gem}"
       end
 
       stream("git #{work_tree_flag} #{git_dir_flag} fetch")
@@ -171,12 +170,12 @@ namespace :bullet_train do
       puts ""
       if details[:npm]
         puts "This package also has an npm package, so we'll link that up as well.".blue
-        stream "cd local/#{gem} && yarn install && yarn link && cd ../.. && yarn link \"#{details[:npm]}\""
+        stream "cd local/#{gem} && yarn install && npx yalc link && cd ../.. && npx yalc link \"#{details[:npm]}\""
 
         puts ""
         puts "And now we're going to watch for any changes you make to the JavaScript and recompile as we go.".blue
         puts "When you're done, you can hit <Control + C> and we'll clean all off this up.".blue
-        stream "cd local/#{gem} && yarn build --watch"
+        stream "cd local/#{gem} && yarn watch"
       else
         puts "This package has no npm package, so we'll just hang out here and do nothing. However, when you hit <Enter> here, we'll start the process of cleaning all of this up.".blue
         $stdin.gets
