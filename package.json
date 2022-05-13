@@ -32,6 +32,10 @@
   "author": "Andrew Culver <andrew.culver@gmail.com>",
   "homepage": "https://bullettrain.co/",
   "license": "MIT",
+  "browserslist": [
+    "defaults",
+    "not IE 11"
+  ],
   "devDependencies": {
     "@babel/core": "^7.13.16",
     "@babel/plugin-proposal-export-default-from": "^7.16.7",
@@ -47,6 +51,6 @@
     "yalc": "^1.0.0-pre.53"
   },
   "dependencies": {
-    "stimulus": "^2.0.0"
+    "@hotwired/stimulus": "^3.0.1"
   }
 }
