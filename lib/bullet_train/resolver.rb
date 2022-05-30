@@ -89,7 +89,7 @@ module BulletTrain
         package_name: nil,
       }
 
-      result[:absolute_path] = class_path || partial_path || locale_path || file_path
+      result[:absolute_path] = file_path || class_path || partial_path || locale_path
       if result[:absolute_path]
         base_path = "bullet_train" + result[:absolute_path].partition("/bullet_train").last
 
