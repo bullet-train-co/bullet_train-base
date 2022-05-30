@@ -90,18 +90,8 @@ module BulletTrain
       }
 
       result[:absolute_path] = class_path || partial_path || locale_path || file_path
-
       if result[:absolute_path]
-        if result[:absolute_path].include?("devise")
-          # The annotated path for devise doesn't actually return an absolute path,
-          # so we have to do some extra steps to get the correct string.
-          relative_partial_path = result[:absolute_path]
-          # If it's a devise partial, it should be coming from bullet_train-base
-          base_path = "#{`bundle show bullet_train`.chomp}/" + relative_partial_path
-          result[:absolute_path] = base_path
-        else
-          base_path = "bullet_train" + result[:absolute_path].partition("/bullet_train").last
-        end
+        base_path = "bullet_train" + result[:absolute_path].partition("/bullet_train").last
 
         # Try to calculate which package the file is from, and what it's path is within that project.
         ["app", "config", "lib"].each do |directory|
@@ -135,6 +125,20 @@ module BulletTrain
     end
 
     def partial_path
+      # We add string literals here since `annotate_rendered_view_with_filenames` returns multiple <!-- BEGIN ... --> comments
+      # on the same line for devise partials which doesn't work with our regexp here, or if there are other locals we don't have
+      # that are necessary to render the partial when calling ApplicationController.render below.
+      if @needle.match?(/^devise\/shared\/[a-z|A-Z|_]/)
+        gem_path = `bundle show bullet_train`.chomp
+        if @needle == "devise/shared/oauth"
+          return "#{gem_path}/app/views/devise/shared/_oauth.html.erb"
+        elsif @needle == "devise/shared/links"
+          return "#{gem_path}/app/views/devise/shared/_links.html.erb"
+        else
+          raise "Could not resolve #{@needle}."
+        end
+      end
+
       annotated_path = ApplicationController.render(template: "bullet_train/partial_resolver", layout: nil, assigns: {needle: @needle}).lines[1].chomp
       if annotated_path =~ /<!-- BEGIN (\S*) -->/
         $1
