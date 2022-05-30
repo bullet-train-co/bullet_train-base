@@ -125,23 +125,24 @@ module BulletTrain
     end
 
     def partial_path
-      # We add string literals here since `annotate_rendered_view_with_filenames` returns multiple <!-- BEGIN ... --> comments
-      # on the same line for devise partials which doesn't work with our regexp here, or if there are other locals we don't have
-      # that are necessary to render the partial when calling ApplicationController.render below.
-      if @needle.match?(/^devise\/shared\/[a-z|A-Z|_]/)
-        gem_path = `bundle show bullet_train`.chomp
-        if @needle == "devise/shared/oauth"
-          return "#{gem_path}/app/views/devise/shared/_oauth.html.erb"
-        elsif @needle == "devise/shared/links"
-          return "#{gem_path}/app/views/devise/shared/_links.html.erb"
-        else
-          raise "Could not resolve #{@needle}."
-        end
+      begin
+        annotated_path = ApplicationController.render(template: "bullet_train/partial_resolver", layout: nil, assigns: {needle: @needle}).lines[1].chomp
+      rescue ActionView::Template::Error => e
+        # This is a really hacky way to get the file name, but the reason we're getting an error in the first place is because
+        # the partial requires locals that we aren't providing in the ApplicationController.render call above,
+        # resulting in an undefined local variable error. We do however get the file name, which we can pass back to the developer.
+        return e.file_name
       end
 
-      annotated_path = ApplicationController.render(template: "bullet_train/partial_resolver", layout: nil, assigns: {needle: @needle}).lines[1].chomp
       if annotated_path =~ /<!-- BEGIN (\S*) -->/
-        $1
+        # If the developer enters a partial that is in bullet_train-base like devise/shared/oauth or devise/shared/links,
+        # it will return a string starting with app/ so we simply point them to the file in this repository.
+        if annotated_path.match?(/^app/)
+          gem_path = `bundle show bullet_train`.chomp
+          "#{gem_path}/#{$1}"
+        else
+          $1
+        end
       else
         raise "It looks like `config.action_view.annotate_rendered_view_with_filenames` isn't enabled?"
       end
