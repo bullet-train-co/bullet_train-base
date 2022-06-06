@@ -50,7 +50,6 @@ namespace :bullet_train do
       # Append the main application's path if the file is a local file.
       # i.e. - app/views/layouts/_head.html.erb
       if input.match?(/^app/)
-        gem_path = `bundle show bullet_train`.chomp
         input = "#{Rails.root}/#{input}"
       end
 

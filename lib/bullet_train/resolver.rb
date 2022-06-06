@@ -137,7 +137,7 @@ module BulletTrain
       if annotated_path =~ /<!-- BEGIN (\S*) -->/
         # If the developer enters a partial that is in bullet_train-base like devise/shared/oauth or devise/shared/links,
         # it will return a string starting with app/ so we simply point them to the file in this repository.
-        if annotated_path.match?(/^app/)
+        if annotated_path.match?(/^<!-- BEGIN app/)
           gem_path = `bundle show bullet_train`.chomp
           "#{gem_path}/#{$1}"
         else
