@@ -1,6 +1,6 @@
 module Account::DatesHelper
   # e.g. October 11, 2018
-  def display_date(timestamp, custom_date_format)
+  def display_date(timestamp, custom_date_format = nil)
     return nil unless timestamp
     if custom_date_format
       local_time(timestamp).strftime(custom_date_format)
