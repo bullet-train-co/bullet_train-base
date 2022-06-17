@@ -61,7 +61,17 @@ def inbound_email_enabled?
   ENV["INBOUND_EMAIL_DOMAIN"].present?
 end
 
-def subscriptions_enabled?
+def billing_enabled?
+  defined?(Billing::Subscription)
+end
+
+# TODO This should be defined by the `bullet_train-billing` package.
+def freemium_enabled?
+  Billing::Product.find_by(id: "free").present?
+end
+
+# TODO This should be in an initializer or something.
+def billing_subscription_creation_disabled?
   false
 end
 
