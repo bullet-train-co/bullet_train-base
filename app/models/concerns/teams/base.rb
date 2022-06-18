@@ -22,6 +22,11 @@ module Teams::Base
     if billing_enabled?
       # subscriptions
       has_many :billing_subscriptions, class_name: "Billing::Subscription", dependent: :destroy, foreign_key: :team_id
+
+      # TODO We need a way for `bullet_train-billing-stripe` to define these.
+      if defined?(Billing::Stripe::Subscription)
+        has_many :billing_stripe_subscriptions, class_name: "Billing::Stripe::Subscription", dependent: :destroy, foreign_key: :team_id
+      end
     end
 
     # validations

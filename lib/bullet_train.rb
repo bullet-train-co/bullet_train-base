@@ -62,12 +62,7 @@ def inbound_email_enabled?
 end
 
 def billing_enabled?
-  defined?(Billing::Subscription)
-end
-
-# TODO This should be defined by the `bullet_train-billing` package.
-def freemium_enabled?
-  Billing::Product.find_by(id: "free").present?
+  defined?(BulletTrain::Billing)
 end
 
 # TODO This should be in an initializer or something.
