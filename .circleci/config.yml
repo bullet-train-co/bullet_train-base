@@ -19,13 +19,11 @@ aliases:
       name: Save Bundle cache
       key: gem-cache-v1-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
       paths:
-        - vendor/bundle
         - tmp/starter/vendor/bundle
   - &save_yarn_cache
       name: Save Yarn cache
       key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
       paths:
-        - node_modules
         - tmp/starter/node_modules
   - &ruby_node_browsers_docker_image
       - image: cimg/ruby:3.1.2-browsers
