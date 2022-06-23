@@ -20,11 +20,13 @@ aliases:
       key: gem-cache-v1-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
       paths:
         - vendor/bundle
+        - tmp/starter/vendor/bundle
   - &save_yarn_cache
       name: Save Yarn cache
       key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
       paths:
         - node_modules
+        - tmp/starter/node_modules
   - &ruby_node_browsers_docker_image
       - image: cimg/ruby:3.1.2-browsers
         environment:
@@ -68,8 +70,8 @@ jobs:
 
       # TODO Figure out how to make these work for `tmp/starter`
       # # Restore dependency caches
-      # - restore_cache: *restore_bundler_cache
-      # - restore_cache: *restore_yarn_cache
+      - restore_cache: *restore_bundler_cache
+      - restore_cache: *restore_yarn_cache
 
       # Install dependencies
       - ruby/bundle-install
@@ -78,8 +80,8 @@ jobs:
 
       # # Save dependency caches
       # # We only do this as part of this job, because it's time consuming and we don't want it to slow down test runners.
-      # - save_cache: *save_bundle_cache
-      # - save_cache: *save_yarn_cache
+      - save_cache: *save_bundle_cache
+      - save_cache: *save_yarn_cache
 
       - run:
           name: Check Standard Ruby
@@ -106,8 +108,8 @@ jobs:
           command: "grep -v 'gem \"bullet_train\"' tmp/starter/Gemfile > tmp/starter/Gemfile.tmp && mv tmp/starter/Gemfile.tmp tmp/starter/Gemfile && echo 'gem \"bullet_train\", path: \"../..\"' >> tmp/starter/Gemfile"
 
       # TODO Figure out how to make these work for `tmp/starter`
-      # - restore_cache: *restore_bundler_cache
-      # - restore_cache: *restore_yarn_cache
+      - restore_cache: *restore_bundler_cache
+      - restore_cache: *restore_yarn_cache
 
       # Install dependencies
       - run: "cd tmp/starter && bundle install"
@@ -161,8 +163,8 @@ jobs:
 
       # TODO Figure out how to make these work for `tmp/starter`
       # # Restore dependency caches
-      # - restore_cache: *restore_bundler_cache
-      # - restore_cache: *restore_yarn_cache
+      - restore_cache: *restore_bundler_cache
+      - restore_cache: *restore_yarn_cache
 
       # Install dependencies
       - run: "cd tmp/starter && bundle install"
