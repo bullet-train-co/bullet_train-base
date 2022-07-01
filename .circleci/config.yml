@@ -132,7 +132,7 @@ jobs:
       - restore_cache: *restore_tmp_yarn_cache
 
       # Install dependencies
-      - run: "cd tmp/starter && bundle install"
+      - run: "cd tmp/starter && bundle install --path=vendor/bundle"
       # - run: "cd tmp/starter && bundle clean --force"
       - run: "cd tmp/starter && bundle exec rake bt:link"
       - run: "cd tmp/starter && yarn install"
