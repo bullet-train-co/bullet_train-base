@@ -133,7 +133,7 @@ jobs:
 
       # Install dependencies
       - run: "cd tmp/starter && bundle install"
-      - run: "cd tmp/starter && bundle clean --force"
+      # - run: "cd tmp/starter && bundle clean --force"
       - run: "cd tmp/starter && bundle exec rake bt:link"
       - run: "cd tmp/starter && yarn install"
       - run: "cd tmp/starter && yarn build"
