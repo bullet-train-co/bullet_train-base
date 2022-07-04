@@ -14,16 +14,13 @@ module BulletTrain
 
       if source_file[:absolute_path]
         puts ""
+        puts "Absolute path:".green
+        puts "  #{source_file[:absolute_path]}".green
+        puts ""
         if source_file[:package_name].present?
-          puts "Absolute path:".green
-          puts "  #{source_file[:absolute_path]}".green
-          puts ""
           puts "Package name:".green
           puts "  #{source_file[:package_name]}".green
         else
-          puts "Absolute path:".green
-          puts "  #{source_file[:absolute_path]}".green
-          puts ""
           puts "Note: If this file was previously ejected from a package, we can no longer see which package it came from. However, it should say at the top of the file where it was ejected from.".yellow
         end
         puts ""
@@ -176,9 +173,9 @@ module BulletTrain
     end
 
     def ejected_theme?
-      current_theme_symbol = File.read("#{Rails.root}/app/helpers/application_helper.rb").split("\n").select {|str| str.match?(/\s+:.*/)}.first
-      current_theme = current_theme_symbol.gsub(/:/, "").strip
-      current_theme != "light" && Dir.exists?("#{Rails.root}/app/assets/stylesheets/#{current_theme}")
+      current_theme_symbol = File.read("#{Rails.root}/app/helpers/application_helper.rb").split("\n").find { |str| str.match?(/\s+:.*/) }
+      current_theme = current_theme_symbol.delete(":").strip
+      current_theme != "light" && Dir.exist?("#{Rails.root}/app/assets/stylesheets/#{current_theme}")
     end
   end
 end
