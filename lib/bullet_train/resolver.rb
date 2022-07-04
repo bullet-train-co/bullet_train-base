@@ -21,8 +21,8 @@ module BulletTrain
           puts "Package name:".green
           puts "  #{source_file[:package_name]}".green
         else
-          puts "Project path:".green
-          puts "  #{source_file[:project_path]}".green
+          puts "Absolute path:".green
+          puts "  #{source_file[:absolute_path]}".green
           puts ""
           puts "Note: If this file was previously ejected from a package, we can no longer see which package it came from. However, it should say at the top of the file where it was ejected from.".yellow
         end
@@ -91,25 +91,26 @@ module BulletTrain
 
       result[:absolute_path] = file_path || class_path || partial_path || locale_path
       if result[:absolute_path]
-        base_path = "bullet_train" + result[:absolute_path].partition("/bullet_train").last
+        if result[:absolute_path].include?("/bullet_train")
+          base_path = "bullet_train" + result[:absolute_path].partition("/bullet_train").last
 
-        # Try to calculate which package the file is from, and what it's path is within that project.
-        ["app", "config", "lib"].each do |directory|
-          regex = /\/#{directory}\//
-          if base_path.match?(regex)
-            project_path = "./#{directory}/#{base_path.rpartition(regex).last}"
-            package_name = base_path.rpartition(regex).first.split("/").last
-            # If the "package name" is actually just the local project directory.
-            if package_name == `pwd`.chomp.split("/").last
-              package_name = nil
+          # Try to calculate which package the file is from, and what it's path is within that project.
+          ["app", "config", "lib"].each do |directory|
+            regex = /\/#{directory}\//
+            if base_path.match?(regex)
+              project_path = "./#{directory}/#{base_path.rpartition(regex).last}"
+              package_name = base_path.rpartition(regex).first.split("/").last
+              # If the "package name" is actually just the local project directory.
+              if package_name == `pwd`.chomp.split("/").last
+                package_name = nil
+              end
+
+              result[:project_path] = project_path
+              result[:package_name] = package_name
             end
-
-            result[:project_path] = project_path
-            result[:package_name] = package_name
           end
         end
       end
-
       result
     end
 
@@ -137,7 +138,7 @@ module BulletTrain
       if annotated_path =~ /<!-- BEGIN (\S*) -->/
         # If the developer enters a partial that is in bullet_train-base like devise/shared/oauth or devise/shared/links,
         # it will return a string starting with app/ so we simply point them to the file in this repository.
-        if annotated_path.match?(/^<!-- BEGIN app/)
+        if annotated_path.match?(/^<!-- BEGIN app/) && !ejected_theme?
           gem_path = `bundle show bullet_train`.chomp
           "#{gem_path}/#{$1}"
         else
@@ -172,6 +173,12 @@ module BulletTrain
       end
 
       nil
+    end
+
+    def ejected_theme?
+      current_theme_symbol = File.read("#{Rails.root}/app/helpers/application_helper.rb").split("\n").select {|str| str.match?(/\s+:.*/)}.first
+      current_theme = current_theme_symbol.gsub(/:/, "").strip
+      current_theme != "light" && Dir.exists?("#{Rails.root}/app/assets/stylesheets/#{current_theme}")
     end
   end
 end
