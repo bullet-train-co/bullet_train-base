@@ -38,7 +38,7 @@ module Users::Base
   end
 
   def email_is_oauth_placeholder?
-    !!email.match(/noreply\+.*@bullettrain.co/)
+    !!email.match(/noreply\+.*@bullettrain\.co/)
   end
 
   def label_string
