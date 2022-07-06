@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   ruby: circleci/ruby@0.1.2
   browser-tools: circleci/browser-tools@1.1
+  bullet_train_testing: gazayas/bullet_train_testing@dev:30d314f312e1e4537a3b8d654ce0b29094240f69
 aliases:
   - &restore_bundler_cache
       name: Restore Bundler cache
@@ -81,9 +82,7 @@ jobs:
       # - save_cache: *save_bundle_cache
       # - save_cache: *save_yarn_cache
 
-      - run:
-          name: Check Standard Ruby
-          command: bundle exec standardrb
+      - bullet_train_testing/standard_ruby
 
   'Starter Repo Minitest':
     docker:
@@ -95,48 +94,12 @@ jobs:
     steps:
       - browser-tools/install-browser-tools
       - checkout
-      - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter"
+      - bullet_train_testing/starter_repo_minitest:
+          packageName: bullet_train-base
+          # If you don't want to use Knapsack Pro, remove these two variables
+          knapsackPro: true
+          parallelism: 16
 
-      - run:
-          name: Rename the directory of the Ruby gem being tested for the partial resolver test.
-          command: "mv /home/circleci/project /home/circleci/bullet_train-base && ln -s /home/circleci/bullet_train-base /home/circleci/project"
-
-      - run:
-          name: Link starter repository to the Ruby gem being tested.
-          command: "grep -v 'gem \"bullet_train\"' tmp/starter/Gemfile > tmp/starter/Gemfile.tmp && mv tmp/starter/Gemfile.tmp tmp/starter/Gemfile && echo 'gem \"bullet_train\", path: \"../..\"' >> tmp/starter/Gemfile"
-
-      # TODO Figure out how to make these work for `tmp/starter`
-      # - restore_cache: *restore_bundler_cache
-      # - restore_cache: *restore_yarn_cache
-
-      # Install dependencies
-      - run: "cd tmp/starter && bundle install"
-      - run: "cd tmp/starter && bundle clean --force"
-      - run: "cd tmp/starter && bundle exec rake bt:link"
-      - run: "cd tmp/starter && yarn install"
-      - run: "cd tmp/starter && yarn build"
-      - run: "cd tmp/starter && yarn build:css"
-
-      - *wait_for_docker
-
-      - run:
-          name: Run tests with Knapsack Pro
-          command: |
-            cd tmp/starter
-            export RAILS_ENV=test
-            bundle exec rails "knapsack_pro:queue:minitest[--verbose]"
-          environment:
-            KNAPSACK_PRO_CI_NODE_TOTAL: 16
-
-      # If you don't want to use Knapsack Pro, then use this configuration:
-      #
-      # - run:
-      #     name: Run unit tests
-      #     command: bundle exec rails test
-      # - run:
-      #     name: Run system tests
-      #     command: bundle exec rails test:system
-      #
       # If you want to gather test results in CircleCI when not running tests in parallel,
       # include `minitest-ci` in your Gemfile and uncomment the following step.
       # You can access the test results via the "Tests" tab within each build in CircleCI.
