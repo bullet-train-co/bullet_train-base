@@ -60,18 +60,16 @@ module Account::Invitations::ControllerBase
       # assume the user needs to create an account.
       # this is not the default for devise, but a sensible default here.
       redirect_to new_user_registration_path
-    else
-      if @invitation
-        @team = @invitation.team
-        if @invitation.is_for?(current_user) || request.post?
-          @invitation.accept_for(current_user)
-          redirect_to account_dashboard_path, notice: I18n.t("invitations.notifications.welcome", team_name: @team.name)
-        else
-          redirect_to account_invitation_path(@invitation.uuid)
-        end
+    elsif @invitation
+      @team = @invitation.team
+      if @invitation.is_for?(current_user) || request.post?
+        @invitation.accept_for(current_user)
+        redirect_to account_dashboard_path, notice: I18n.t("invitations.notifications.welcome", team_name: @team.name)
       else
-        redirect_to account_dashboard_path
+        redirect_to account_invitation_path(@invitation.uuid)
       end
+    else
+      redirect_to account_dashboard_path
 
     end
   end
