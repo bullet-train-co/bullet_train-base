@@ -1,9 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { enter, leave } from "el-transition"
 
-const CLOSED = "closed"
-const OPEN = "open"
-
 export default class extends Controller {
   static targets = [ "wrapper", "revealable"]
   static classes = [ "hidden" ] // necessary because we're always hiding the mobile menu on larger screens and this is the class used for only mobile screen sizes
