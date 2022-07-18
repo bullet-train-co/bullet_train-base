@@ -24,14 +24,17 @@ By default, a call to save the new `sort_order` is triggered automatically on re
 Add the  `data-sortable-save-on-reorder-value="false"` param on the sortable `tbody`:
 
 ```html
-<tbody data-controller="sortable" data-sortable-save-on-reorder-value="false"  ...>
+<tbody data-controller="sortable"
+  data-sortable-save-on-reorder-value="false"
+  ...
+>
 ```
 
 ### To manually fire the save action via a button
 
 Since the button won't be part of the sortable `tbody`, you'll need to wrap both the sortable `tbody` and the save button in a new Stimulus controller in a ancestor element in the DOM.
 
-```javascript
+```js
 /* sortable_wrapper_controller.js */
 import { Controller } from "@hotwired/stimulus"
 
@@ -51,9 +54,14 @@ On the button, add a `data-action`
 <button data-action="sortable-wrapper#saveSortOrder">Save Sort Order</button>
 ```
 
-And on the sortable `tbody`, catch the `save-sort-order` event:
+And on the sortable `tbody`, catch the `save-sort-order` event and define it as the `sortable` target for the `sortable-wrapper` controller:
 
 ```html
-<tbody data-controller="sortable" data-sortable-save-on-reorder-value="false" data-action="save-sort-order->sortable#saveSortOrder" ...>
+<tbody data-controller="sortable"
+  data-sortable-save-on-reorder-value="false"
+  data-action="save-sort-order->sortable#saveSortOrder"
+  data-sortable-wrapper-target="sortable"
+  ...
+>
 ```
 
