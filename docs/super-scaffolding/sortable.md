@@ -65,3 +65,73 @@ And on the sortable `tbody`, catch the `save-sort-order` event and define it as 
 >
 ```
 
+## Events
+
+Under the hood, the `sortable` Stimulus controller uses the [dragula](https://github.com/bevacqua/dragula) library.
+
+All of the events that `dragula` defines are re-dispatched as native DOM events. The native DOM event name is pre-pended with `sortable:`
+
+| dragula event name  | DOM event name       |
+|---------------------|----------------------|
+| drag                | sortable:drag        |
+| dragend             | sortable:dragend     |
+| drop                | sortable:drop        |
+| cancel              | sortable:cancel      |
+| remove              | sortable:remove      |
+| shadow              | sortable:shadow      |
+| over                | sortable:over        |
+| out                 | sortable:out         |
+| cloned              | sortable:cloned      |
+
+The original event's listener arguments are passed as a simple numbered Array under `event.detail.args` of the native DOM event. See [dragula's list of events](https://github.com/bevacqua/dragula#drakeon-events) for the listener arguments.
+
+### Example: Asking for Confirmation on the `drop` Event
+
+Let's say we'd like to ask the user to confirm before saving the new sort order:
+
+> Are you sure you want to place DROPPED ITEM before SIBLING ITEM?
+
+```js
+/* confirm-reorder_controller.js */
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = [ "sortable" ]
+  
+  requestConfirmation(event) {
+    const [el, target, source, sibling] = event.detail?.args
+    
+    // sibling will be undefined if dropped in last position, taking a shortcut here
+    const areYouSure = `Are you sure you want to place ${el.dataset.name} before ${sibling.dataset.name}?`
+    
+    // let's suppose each <tr> in sortable has a data-name attribute
+    if (confirm(areYouSure)) {
+      this.sortableTarget.dispatchEvent(new CustomEvent('save-sort-order'))
+    } else {
+      this.revertToOriginalOrder()
+    }
+  }
+  
+  prepareForRevertOnCancel(event) {
+    // we're assuming we can swap out the HTML safely
+    this.originalSortableHTML = this.sortableTarget.innerHTML
+  }
+  
+  revertToOriginalOrder() {
+    if (this.originalSortableHTML === undefined) { return }
+    this.sortableTarget.innerHTML = this.originalSortableHTML
+    this.originalSortableHTML = undefined
+  }
+}
+```
+
+And on the sortable `tbody`, catch the `sortable:drop`, `sortable:drag` (for catching when dragging starts) and `save-sort-order` events. Also define it as the `sortable` target for the `confirm-reorder` controller:
+
+```html
+<tbody data-controller="sortable"
+  data-sortable-save-on-reorder-value="false"
+  data-action="sortable:drop->confirm-reorder#requestConfirmation sortable:drag->confirm-reorder#prepareForRevertOnCancel save-sort-order->sortable#saveSortOrder"
+  data-confirm-reorder-target="sortable"
+  ...
+>
+```
