@@ -1,6 +1,6 @@
 # Bullet Train Developer Documentation
 
-> This release of Bullet Train is still a pre-release, so please pardon the dust while we work to complete the documentation for certain topics.
+> Some of the open-source Bullet Train packages are considered pre-release, so please pardon the dust while we work to complete the documentation for certain topics.
 
 ## Introduction
  - [What is Bullet Train?](https://bullettrain.co) <i class="ti ti-new-window ml-2"></i>
@@ -16,6 +16,7 @@
 
 ## Developer Tools
  - [Super Scaffolding](/docs/super-scaffolding.md)
+ - [Action Models](/docs/action-models.md)
  - [Database Seeds](/docs/seeds.md)
  - [Test Suite](/docs/testing.md)
  - [Point-and-Click Test Writing](https://github.com/bullet-train-co/magic_test) <i class="ti ti-new-window ml-2"></i>
