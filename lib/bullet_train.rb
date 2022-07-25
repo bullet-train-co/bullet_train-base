@@ -9,7 +9,7 @@ require "bullet_train/has_uuid"
 require "bullet_train/scope_validator"
 
 require "colorizer"
-require "string/emoji"
+require "bullet_train/core_ext/string_emoji_helper"
 
 require "devise"
 # require "devise-two-factor"
@@ -31,10 +31,14 @@ require "figaro"
 require "valid_email"
 require "commonmarker"
 require "extended_email_reply_parser"
+require "pagy"
+require "devise/pwned_password"
 
 module BulletTrain
   mattr_accessor :routing_concerns, default: []
   mattr_accessor :linked_gems, default: ["bullet_train"]
+  mattr_accessor :parent_class, default: "Team"
+  mattr_accessor :base_class, default: "ApplicationRecord"
 end
 
 def default_url_options_from_base_url
@@ -59,7 +63,12 @@ def inbound_email_enabled?
   ENV["INBOUND_EMAIL_DOMAIN"].present?
 end
 
-def subscriptions_enabled?
+def billing_enabled?
+  defined?(BulletTrain::Billing)
+end
+
+# TODO This should be in an initializer or something.
+def billing_subscription_creation_disabled?
   false
 end
 
@@ -97,11 +106,14 @@ def two_factor_authentication_enabled?
   ENV["TWO_FACTOR_ENCRYPTION_KEY"].present?
 end
 
-def any_oauth_enabled?
-  [
-    stripe_enabled?,
-    # 🚅 super scaffolding will insert new oauth provider checks above this line.
-  ].select(&:present?).any?
+# Don't redefine this if an application redefines it locally.
+unless defined?(any_oauth_enabled?)
+  def any_oauth_enabled?
+    [
+      stripe_enabled?,
+      # 🚅 super scaffolding will insert new oauth provider checks above this line.
+    ].select(&:present?).any?
+  end
 end
 
 def invitation_only?

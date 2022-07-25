@@ -27,20 +27,43 @@ Even in vanilla Rails development, when you're looking at a view file, the path 
 `bin/resolve` makes it easy to figure out where where a partial is being served from:
 
 ```
-$ bin/resolve shared/box
+bin/resolve shared/box
 ```
 
-### Exposing Rendered Views with Xray
+### Exposing Rendered Views with Annotated Views
 
-> TODO Is this still true in Rails 7? Does it not do something like this by default now?
-
-If you're looking at a rendered view in the browser, it can be hard to know which file to open in order to make a change. To help, Bullet Train includes [Xray](https://github.com/brentd/xray-rails) by default, so you can right click on any element you see, select "Inspect Element", and you'll see comments in the HTML source telling you which file is powering a particular portion of the view, like this:
+If you're looking at a rendered view in the browser, it can be hard to know which file to open in order to make a change. To help, Bullet Train enables `config.action_view.annotate_rendered_view_with_filenames` by default, so you can right click on any element you see, select "Inspect Element", and you'll see comments in the HTML source telling you which file is powering a particular portion of the view, like this:
 
 ```
-<!--XRAY START 90 /Users/andrewculver/.rbenv/versions/3.1.1/lib/ruby/gems/3.1.0/gems/bullet_train-themes-light-1.0.10/app/views/themes/light/workflow/_box.html.erb-->
+<!-- BEGIN /Users/andrewculver/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/bullet_train-themes-light-1.0.10/app/views/themes/light/workflow/_box.html.erb -->
 ```
 
-Note that in the example above, the view in question isn't actually coming from the application repository. Instead, it's being included from the `bullet_train-themes-light` package. For instructions on how to customize it, see [Overriding the Framework](/docs/override).
+If you want to customize files like this that you find annotated in your browser, you can use the `--interactive` flag to eject the file to your main application, or simply open it in your code editor.
+
+```
+> bin/resolve --interactive
+
+OK, paste what you've got for us and hit <Return>!
+
+<!-- BEGIN /Users/andrewculver/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/bullet_train-themes-light-1.0.10/app/views/themes/light/workflow/_box.html.erb -->
+
+Absolute path:
+  /Users/andrewculver/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/bullet_train-themes-light-1.0.10/app/views/themes/light/workflow/_box.html.erb
+
+Package name:
+  bullet_train-themes-light-1.0.10
+
+
+Would you like to eject the file into the local project? (y/n)
+n
+
+Would you like to open `/Users/andrewculver/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/bullet_train-themes-light-1.0.10/app/views/themes/light/workflow/_box.html.erb`? (y/n)
+y
+```
+
+You may also want to consider using `bin/develop`, which will clone the Bullet Train package of your choice to `local/` within your main application's root directory. Running this command will also automatically link the package to your main application and open it in the code editor for you, so you can start using the cloned repository and make changes to your main application right away.
+
+Note that in the example above, the view in question isn't actually coming from the application repository. Instead, it's being included from the `bullet_train-themes-light` package. For further instructions on how to customize it, see [Overriding Framework Defaults](/docs/overriding.md).
 
 ### Drilling Down on Translation Keys
 
@@ -59,5 +82,5 @@ You can also log all the translation key for anything being rendered to the cons
 Once you have the full I18N translation key, you can use `bin/resolve` to figure out which package and file it's coming from. At that point, if you need to customize it, you can also use the `--eject` option to copy the  the framework for customization in your local application:
 
 ```
-$ bin/resolve en.account.onboarding.user_details.edit.header --eject --open
+bin/resolve en.account.onboarding.user_details.edit.header --eject --open
 ```

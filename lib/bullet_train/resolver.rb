@@ -1,4 +1,4 @@
-require 'io/wait'
+require "io/wait"
 
 module BulletTrain
   class Resolver
@@ -13,28 +13,23 @@ module BulletTrain
       source_file = calculate_source_file_details
 
       if source_file[:absolute_path]
+        puts ""
+        puts "Absolute path:".green
+        puts "  #{source_file[:absolute_path]}".green
+        puts ""
         if source_file[:package_name].present?
-          puts ""
-          puts "Absolute path:".green
-          puts "  #{source_file[:absolute_path]}".green
-          puts ""
           puts "Package name:".green
           puts "  #{source_file[:package_name]}".green
-          puts ""
         else
-          puts ""
-          puts "Project path:".green
-          puts "  #{source_file[:project_path]}".green
-          puts ""
           puts "Note: If this file was previously ejected from a package, we can no longer see which package it came from. However, it should say at the top of the file where it was ejected from.".yellow
-          puts ""
         end
+        puts ""
 
         if interactive && !eject
           puts "\nWould you like to eject the file into the local project? (y/n)\n"
           input = $stdin.gets
           $stdin.getc while $stdin.ready?
-          if input.first.downcase == 'y'
+          if input.first.downcase == "y"
             eject = true
           end
         end
@@ -46,7 +41,7 @@ module BulletTrain
             else
               `mkdir -p #{source_file[:project_path].split("/")[0...-1].join("/")}`
               puts "Ejecting `#{source_file[:absolute_path]}` to `#{source_file[:project_path]}`".green
-              File.open("#{source_file[:project_path]}", "w+") do |file|
+              File.open((source_file[:project_path]).to_s, "w+") do |file|
                 case source_file[:project_path].split(".").last
                 when "rb", "yml"
                   file.puts "# Ejected from `#{source_file[:package_name]}`.\n\n"
@@ -69,13 +64,13 @@ module BulletTrain
           puts "\nWould you like to open `#{source_file[:absolute_path]}`? (y/n)\n"
           input = $stdin.gets
           $stdin.getc while $stdin.ready?
-          if input.first.downcase == 'y'
+          if input.first.downcase == "y"
             open = true
           end
         end
 
         if open
-          path = source_file[:package_name] ? source_file[:absolute_path] : "#{source_file[:project_path]}"
+          path = source_file[:package_name] ? source_file[:absolute_path] : (source_file[:project_path]).to_s
           puts "Opening `#{path}`.\n".green
           exec "open #{path}"
         end
@@ -91,28 +86,28 @@ module BulletTrain
         package_name: nil,
       }
 
-      result[:absolute_path] = class_path || partial_path || locale_path || file_path
-
+      result[:absolute_path] = file_path || class_path || partial_path || locale_path
       if result[:absolute_path]
-        base_path = "bullet_train" + result[:absolute_path].split("/bullet_train").last
+        if result[:absolute_path].include?("/bullet_train")
+          base_path = "bullet_train" + result[:absolute_path].partition("/bullet_train").last
 
-        # Try to calculate which package the file is from, and what it's path is within that project.
-        ["app", "config", "lib"].each do |directory|
-          regex = /\/#{directory}\//
-          if base_path.match?(regex)
-            project_path = "./#{directory}/#{base_path.rpartition(regex).last}"
-            package_name = base_path.rpartition(regex).first.split("/").last
-            # If the "package name" is actually just the local project directory.
-            if package_name == `pwd`.chomp.split("/").last
-              package_name = nil
+          # Try to calculate which package the file is from, and what it's path is within that project.
+          ["app", "config", "lib"].each do |directory|
+            regex = /\/#{directory}\//
+            if base_path.match?(regex)
+              project_path = "./#{directory}/#{base_path.rpartition(regex).last}"
+              package_name = base_path.rpartition(regex).first.split("/").last
+              # If the "package name" is actually just the local project directory.
+              if package_name == `pwd`.chomp.split("/").last
+                package_name = nil
+              end
+
+              result[:project_path] = project_path
+              result[:package_name] = package_name
             end
-
-            result[:project_path] = project_path
-            result[:package_name] = package_name
           end
         end
       end
-
       result
     end
 
@@ -121,35 +116,48 @@ module BulletTrain
     end
 
     def class_path
-      begin
-        @needle.constantize
-        return Object.const_source_location(@needle).first
-      rescue NameError => _
-        return false
-      end
+      @needle.constantize
+      Object.const_source_location(@needle).first
+    rescue NameError => _
+      false
     end
 
     def partial_path
       begin
-        xray_path = ApplicationController.render(template: "bullet_train/partial_resolver", layout: nil, assigns: {needle: @needle}).lines[1].chomp
-        if xray_path.match(/<!--XRAY START \d+ (.*)-->/)
-          return $1
-        else
-          raise "It looks like Xray-rails isn't properly enabled?"
-        end
-      rescue ActionView::Template::Error => _
-        return nil
+        annotated_path = ApplicationController.render(template: "bullet_train/partial_resolver", layout: nil, assigns: {needle: @needle}).lines[1].chomp
+      rescue ActionView::Template::Error => e
+        # This is a really hacky way to get the file name, but the reason we're getting an error in the first place is because
+        # the partial requires locals that we aren't providing in the ApplicationController.render call above,
+        # resulting in an undefined local variable error. We do however get the file name, which we can pass back to the developer.
+        return e.file_name
       end
+
+      if annotated_path =~ /<!-- BEGIN (\S*) -->/
+        # If the developer enters a partial that is in bullet_train-base like devise/shared/oauth or devise/shared/links,
+        # it will return a string starting with app/ so we simply point them to the file in this repository.
+        if annotated_path.match?(/^<!-- BEGIN app/) && !ejected_theme?
+          gem_path = `bundle show bullet_train`.chomp
+          "#{gem_path}/#{$1}"
+        else
+          $1
+        end
+      else
+        raise "It looks like `config.action_view.annotate_rendered_view_with_filenames` isn't enabled?"
+      end
+    rescue ActionView::Template::Error => _
+      nil
     end
 
     def file_path
       # We don't have to do anything here... the absolute path is what we're passed, and we just pass it back.
-      @needle
+      if @needle[0] == "/"
+        @needle
+      end
     end
 
     def locale_path
       # This is a complete list of translation files provided by this app or any linked Bullet Train packages.
-      (["#{Rails.root.to_s}/config/locales"] + `find ./tmp/gems/*`.lines.map(&:strip).map { |link| File.readlink(link) + "/config/locales" }).each do |locale_source|
+      (["#{Rails.root}/config/locales"] + `find ./tmp/gems/*`.lines.map(&:strip).map { |link| File.readlink(link) + "/config/locales" }).each do |locale_source|
         if File.exist?(locale_source)
           `find -L #{locale_source} | grep ".yml"`.lines.map(&:strip).each do |file_path|
             yaml = YAML.load_file(file_path, aliases: true)
@@ -161,7 +169,13 @@ module BulletTrain
         end
       end
 
-      return nil
+      nil
+    end
+
+    def ejected_theme?
+      current_theme_symbol = File.read("#{Rails.root}/app/helpers/application_helper.rb").split("\n").find { |str| str.match?(/\s+:.*/) }
+      current_theme = current_theme_symbol.delete(":").strip
+      current_theme != "light" && Dir.exist?("#{Rails.root}/app/assets/stylesheets/#{current_theme}")
     end
   end
 end
