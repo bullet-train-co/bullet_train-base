@@ -13,7 +13,6 @@ module Memberships::Base
 
     has_many :scaffolding_completely_concrete_tangible_things_assignments, class_name: "Scaffolding::CompletelyConcrete::TangibleThings::Assignment", dependent: :destroy
     has_many :scaffolding_completely_concrete_tangible_things, through: :scaffolding_completely_concrete_tangible_things_assignments, source: :tangible_thing
-    has_many :reassignments_scaffolding_completely_concrete_tangible_things_reassignments, class_name: "Memberships::Reassignments::ScaffoldingCompletelyConcreteTangibleThingsReassignment", dependent: :destroy, foreign_key: :membership_id
 
     has_many :scaffolding_absolutely_abstract_creative_concepts_collaborators, class_name: "Scaffolding::AbsolutelyAbstract::CreativeConcepts::Collaborator", dependent: :destroy
 
@@ -29,6 +28,11 @@ module Memberships::Base
     scope :current_and_invited, -> { includes(:invitation).where("user_id IS NOT NULL OR invitations.id IS NOT NULL").references(:invitation) }
     scope :current, -> { where("user_id IS NOT NULL") }
     scope :tombstones, -> { includes(:invitation).where("user_id IS NULL AND invitations.id IS NULL").references(:invitation) }
+
+    # TODO Probably we can provide a way for gem packages to define these kinds of extensions.
+    if billing_enabled?
+      scope :billable, -> { current }
+    end
   end
 
   def name

@@ -29,10 +29,14 @@ require "figaro"
 require "valid_email"
 require "commonmarker"
 require "extended_email_reply_parser"
+require "pagy"
+require "devise/pwned_password"
 
 module BulletTrain
   mattr_accessor :routing_concerns, default: []
   mattr_accessor :linked_gems, default: ["bullet_train"]
+  mattr_accessor :parent_class, default: "Team"
+  mattr_accessor :base_class, default: "ApplicationRecord"
 end
 
 def default_url_options_from_base_url
@@ -57,7 +61,12 @@ def inbound_email_enabled?
   ENV["INBOUND_EMAIL_DOMAIN"].present?
 end
 
-def subscriptions_enabled?
+def billing_enabled?
+  defined?(BulletTrain::Billing)
+end
+
+# TODO This should be in an initializer or something.
+def billing_subscription_creation_disabled?
   false
 end
 
