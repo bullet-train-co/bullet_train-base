@@ -61,9 +61,8 @@ module Account::Invitations::ControllerBase
       # this is not the default for devise, but a sensible default here.
       redirect_to new_user_registration_path
 
-    else
-      # session[:invitation_uuid] should only be present if is registering for the first time.
-      @invitation = Invitation.find_by(uuid: session[:invitation_uuid] || params[:id])
+    # session[:invitation_uuid] should only be present if is registering for the first time.
+    elsif (@invitation = Invitation.find_by(uuid: session[:invitation_uuid] || params[:id]))
       session.delete(:invitation_uuid) if session[:invitation_uuid].present?
 
       if @invitation
