@@ -42,9 +42,13 @@ module Account::Invitations::ControllerBase
   # POST /invitations/1/accept
   # POST /invitations/1/accept.json
   def accept
+    # The user should be alerted when there is no
+    # invitation regardless if they're registered or not.
+    @invitation = Invitation.find_by(uuid: params[:id])
+    flash[:alert] = t("invitations.notifications.doesnt_exist") if @invitation.nil?
+
     # unless the user is signed in.
     if !current_user.present?
-
       # keep track of the uuid of the invitation so we can reload it
       # after they sign up. at this point we don't even know if it's
       # valid, but that's fine.
@@ -71,9 +75,10 @@ module Account::Invitations::ControllerBase
           redirect_to account_invitation_path(@invitation.uuid)
         end
       else
-        redirect_to account_dashboard_path
+        redirect_to account_invitation_path(@invitation.uuid)
       end
-
+    else
+      redirect_to account_dashboard_path
     end
   end
 
