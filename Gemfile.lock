@@ -350,7 +350,6 @@ PLATFORMS
 DEPENDENCIES
   active_hash!
   bullet_train!
-  nice_partials (~> 0.1.6)
   pry
   pry-stack_explorer
   sprockets-rails
