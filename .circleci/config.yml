@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   ruby: circleci/ruby@0.1.2
   browser-tools: circleci/browser-tools@1.1
-  bullet_train_testing: gazayas/bullet_train_testing@dev:a3ac6a622e2e16980ce5bf84b28351bb48db56e9
+  bullet_train_testing: gazayas/bullet_train_testing@1.0.3
 aliases:
   - &restore_bundler_cache
       name: Restore Bundler cache
