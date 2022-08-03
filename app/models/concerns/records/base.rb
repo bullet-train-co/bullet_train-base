@@ -72,7 +72,7 @@ module Records::Base
     rake_tasks = ObjectSpace.each_object(Rake::Task)
     return false if rake_tasks.count.zero?
 
-    db_seed_task = rake_tasks.select {|task| task.name.match?(/^db:seed$/)}.first
+    db_seed_task = rake_tasks.find { |task| task.name.match?(/^db:seed$/) }
     db_seed_task.already_invoked
   end
 end
