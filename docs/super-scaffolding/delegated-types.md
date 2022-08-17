@@ -34,7 +34,7 @@ rails g model Message subject:string
 rails g model Comment content:text
 ```
 
-Note that in this specific approach we don't need a `team:references` on `Message` and `Comment`. That's because in this approach there are no controllers specific to `Message` and `Comment`, so all permissions are being inforced by checking the ownership of `Entry`. (That's not to say it would be wrong to add them for other reasons, we're just keeping it as simple as possible here.)
+Note that in this specific approach we don't need a `team:references` on `Message` and `Comment`. That's because in this approach there are no controllers specific to `Message` and `Comment`, so all permissions are being enforced by checking the ownership of `Entry`. (That's not to say it would be wrong to add them for other reasons, we're just keeping it as simple as possible here.)
 
 ### 2. Super Scaffolding for `Entry`
 
