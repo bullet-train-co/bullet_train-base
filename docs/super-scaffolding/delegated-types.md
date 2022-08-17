@@ -59,7 +59,33 @@ fields: &fields
       "Comment": Comment
 ```
 
-<small>TODO Insert a live example of what `shared/fields/buttons` looks like with these options passed in.</small>
+We will add this block below in the next step on our `new.html.erb` page so you don't have to worry about it now, but with the options above in place, our buttons partial will now allow your users to select either a `Message` or a `Comment` before creating the `Entry` itself:
+
+```
+<% with_field_settings form: form do %>
+  <%= render 'shared/fields/buttons', method: :entryable_type, html_options: {autofocus: true} %>
+  <%# 🚅 super scaffolding will insert new fields above this line. %>
+<% end %>
+```
+
+This will produce the following HTML:
+```
+<div>
+  <label class="btn-toggle" data-controller="fields--button-toggle">
+    <input data-fields--button-toggle-target="shadowField" type="radio" value="Message" name="entry[entryable_type]" id="entry_entryable_type_message">
+    <button type="button" class="button-alternative mb-1.5 mr-1" data-action="fields--button-toggle#clickShadowField">
+      Message
+    </button>
+  </label>
+  <label class="btn-toggle" data-controller="fields--button-toggle">
+    <input data-fields--button-toggle-target="shadowField" type="radio" value="Comment" name="entry[entryable_type]" id="entry_entryable_type_comment">
+    <button type="button" class="button-alternative mb-1.5 mr-1" data-action="fields--button-toggle#clickShadowField">
+      Comment
+    </button>
+  </label>
+</div>
+```
+
 
 ### 4. Add Our First Step to `new.html.erb`
 
