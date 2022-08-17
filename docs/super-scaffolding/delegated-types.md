@@ -234,9 +234,11 @@ We add this _below_ the Super Scaffolding hook because we want any additional fi
 
 ### 10. Add Attributes of the Concrete Children to `show.html.erb`
 
-Under the Super Scaffolding hook in `app/views/account/entries/show.html.erb`, add the following:
+Add the following in `app/views/account/entries/show.html.erb` under the Super Scaffolding hook shown in the example code below:
 
 ```
+<%# 🚅 super scaffolding will insert new fields above this line. %>
+
 <% with_attribute_settings object: @entry.entryable, strategy: :label do %>
   <% case @entry.entryable %>
   <% when Message %>
