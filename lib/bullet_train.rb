@@ -18,8 +18,6 @@ require "cancancan"
 require "possessive"
 require "sidekiq"
 require "fastimage"
-require "pry"
-require "pry-stack_explorer"
 require "awesome_print"
 require "microscope"
 require "http_accept_language"
@@ -130,4 +128,8 @@ end
 
 def multiple_locales?
   @multiple_locales ||= I18n.available_locales.many?
+end
+
+def silence_logs?
+  ENV["SILENCE_LOGS"].present?
 end

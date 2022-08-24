@@ -37,11 +37,8 @@ module Users::Base
     after_update :set_teams_time_zone
   end
 
-  # TODO we need to update this to some sort of invalid email address or something
-  # people know to ignore. it would be a security problem to have this pointing
-  # at anybody's real email address.
   def email_is_oauth_placeholder?
-    !!email.match(/noreply\+.*@bullettrain.co/)
+    !!email.match(/noreply@\h{32}\.example\.com/)
   end
 
   def label_string
@@ -66,8 +63,7 @@ module Users::Base
 
   def create_default_team
     # This creates a `Membership`, because `User` `has_many :teams, through: :memberships`
-    # TODO The team name should take into account the user's current locale.
-    default_team = teams.create(name: "Your Team", time_zone: time_zone)
+    default_team = teams.create(name: I18n.t("teams.new.default_team_name"), time_zone: time_zone)
     memberships.find_by(team: default_team).update role_ids: [Role.admin.id]
     update(current_team: default_team)
   end
