@@ -6,7 +6,7 @@ class SessionsController < Devise::SessionsController
   # With Turbo enabled the browser will block those redirects with a CORS error.
   # https://github.com/bullet-train-co/bullet_train/issues/384
   def user_return_to_is_oauth
-    session["user_return_to"] && session["user_return_to"].match(/^\/oauth/)
+    session["user_return_to"]&.match(/^\/oauth/)
   end
   helper_method :user_return_to_is_oauth
 
