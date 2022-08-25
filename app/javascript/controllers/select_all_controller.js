@@ -13,6 +13,7 @@ export default class extends Controller {
     if (!this.hasUnavailableClass) { return }
     
     this.wrapperTarget.classList.remove(this.unavailableClass)
+    this.updateToggle()
   }
   
   selectAllOrNone(event) {
