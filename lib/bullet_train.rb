@@ -30,7 +30,7 @@ require "valid_email"
 require "commonmarker"
 require "extended_email_reply_parser"
 require "pagy"
-require "devise/pwned_password"
+require "devise/pwned_password" unless ENV["DISABLE_PWND_PASSWORD"]
 
 module BulletTrain
   mattr_accessor :routing_concerns, default: []
