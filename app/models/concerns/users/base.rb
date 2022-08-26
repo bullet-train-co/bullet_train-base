@@ -9,12 +9,12 @@ module Users::Base
     end
 
     devise :omniauthable
-    devise :pwned_password
     devise :registerable
     devise :recoverable
     devise :rememberable
     devise :trackable
     devise :validatable
+    devise :pwned_password unless disable_pwnd_password?
 
     # teams
     has_many :memberships, dependent: :destroy

@@ -133,3 +133,7 @@ end
 def silence_logs?
   ENV["SILENCE_LOGS"].present?
 end
+
+def disable_pwnd_password?
+  ENV["DISABLE_PWND_PASSWORD"].present?
+end
