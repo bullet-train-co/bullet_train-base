@@ -33,4 +33,9 @@ module CurrentAttributes::Base
       user.memberships.where(team: team)
     end
   end
+
+  def directory_order
+    default_directory_order = BulletTrain::Themes::Light::Theme.new.directory_order
+    default_directory_order.unshift(current_theme.to_s).uniq
+  end
 end
