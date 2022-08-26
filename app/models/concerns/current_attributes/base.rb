@@ -35,7 +35,6 @@ module CurrentAttributes::Base
   end
 
   def directory_order
-    default_directory_order = BulletTrain::Themes::Light::Theme.new.directory_order
-    default_directory_order.unshift(current_theme.to_s).uniq
+    "BulletTrain::Themes::#{current_theme.to_s.capitalize}::Theme".constantize.new.directory_order
   end
 end
