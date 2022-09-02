@@ -85,7 +85,7 @@ module Records::Base
       controller.request = ActionDispatch::Request.new({})
       local_class_key = self.class.name.underscore.split("/").last.to_sym
       controller.render_to_string(
-        "api/#{BulletTrain::Api.current_version}/#{self.class.name.underscore.pluralize}/_#{local_class_key}", 
+        "api/#{BulletTrain::Api.current_version}/#{self.class.name.underscore.pluralize}/_#{local_class_key}",
         locals: {
           local_class_key => self
         }
