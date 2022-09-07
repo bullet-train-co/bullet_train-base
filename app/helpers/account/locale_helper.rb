@@ -38,8 +38,7 @@ module Account::LocaleHelper
 
     # this is a bit scary, no?
     if controller.class.name.start_with?("Account::")
-      # Give preference to the options they've passed in.
-      options = models_locales(@child_object, @parent_object).merge(options)
+      options = options.with_defaults models_locales(@child_object, @parent_object)
     end
 
     super(key, **options).tap do |result|
