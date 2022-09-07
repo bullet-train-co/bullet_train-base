@@ -4,7 +4,7 @@ module BulletTrain::I18n::Introspection
     full_translation_key = extract_full_translation_key_from(key, options) { super(_1, **_2) }
 
     super.tap do |result|
-      if !Rails.env.production? && params.present?
+      if params.present?
         if params[:log_locales]
           if result == options[:default]
             puts "🌐 #{full_translation_key}: Not found? Result matched default: \"#{result}\"".yellow
@@ -23,7 +23,7 @@ module BulletTrain::I18n::Introspection
     # application are coming from where. To help with this, you can add `?debug=true` to any URL and we'll output
     # any rendered strings and their translation keys on the console.
     def extract_full_translation_key_from(key, options)
-      if !Rails.env.production? && params.present? && (params[:log_locales] || params[:show_locales])
+      if params.present? && (params[:log_locales] || params[:show_locales])
         yield key + "💣", options.except(:default)
       end
     rescue I18n::MissingTranslationData => exception
