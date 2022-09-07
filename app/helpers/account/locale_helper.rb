@@ -17,11 +17,7 @@ module Account::LocaleHelper
   end
 
   def models_locales(*models)
-    hash = {}
-    models.compact.each do |model|
-      hash.merge! model_locales(model)
-    end
-    hash
+    models.map { model_locales(_1) if _1 }.compact.inject(:merge!)
   end
 
   # this is a bit scary, no?
