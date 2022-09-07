@@ -25,7 +25,7 @@ module Account::LocaleHelper
     controller.class.name.start_with?("Account::")
   end
 
-  def t(key, **options)
+  def translate(key, **options)
     # When bundled Ruby gems provide a lot of translations, it can be difficult to figure out which strings in the
     # application are coming from where. To help with this, you can add `?debug=true` to any URL and we'll output
     # any rendered strings and their translation keys on the console.
@@ -70,9 +70,10 @@ module Account::LocaleHelper
   end
 
   # like 'translate', but if the key isn't found, it returns nil.
-  def ot(key, **options)
-    t(key, **options)
+  def otranslate(key, **options)
+    translate(key, **options)
   rescue I18n::MissingTranslationData => _
     nil
   end
+  alias ot otranslate
 end
