@@ -20,11 +20,6 @@ module Account::LocaleHelper
     models.map { model_locales(_1) if _1 }.compact.inject(:merge!)
   end
 
-  # this is a bit scary, no?
-  def account_controller?
-    controller.class.name.start_with?("Account::")
-  end
-
   def translate(key, **options)
     # When bundled Ruby gems provide a lot of translations, it can be difficult to figure out which strings in the
     # application are coming from where. To help with this, you can add `?debug=true` to any URL and we'll output
@@ -41,7 +36,8 @@ module Account::LocaleHelper
       end
     end
 
-    if account_controller?
+    # this is a bit scary, no?
+    if controller.class.name.start_with?("Account::")
       # Give preference to the options they've passed in.
       options = models_locales(@child_object, @parent_object).merge(options)
     end
