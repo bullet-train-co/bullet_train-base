@@ -22,7 +22,7 @@ module Account::LocaleHelper
 
   # this is a bit scary, no?
   def account_controller?
-    controller.class.name.match(/^Account::/)
+    controller.class.name.start_with?("Account::")
   end
 
   def t(key, options = {})
