@@ -14,9 +14,8 @@ module Account::LocaleHelper
     return {} unless name
 
     hash = {}
-    prefix = model.class.name.split("::").last.underscore
-    hash[:"#{prefix}_name"] = name
-    hash[:"#{prefix.pluralize}_possessive"] = possessive_string(name)
+    hash[:"#{model.model_name.element}_name"] = name
+    hash[:"#{model.model_name.collection}_possessive"] = possessive_string(name)
 
     hash
   end
