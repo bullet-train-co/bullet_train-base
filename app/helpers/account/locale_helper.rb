@@ -13,11 +13,7 @@ module Account::LocaleHelper
     name = model.label_string.presence
     return {} unless name
 
-    hash = {}
-    hash[:"#{model.model_name.element}_name"] = name
-    hash[:"#{model.model_name.collection}_possessive"] = possessive_string(name)
-
-    hash
+    { "#{model.model_name.element}_name": name, "#{model.model_name.collection}_possessive": possessive_string(name) }
   end
 
   def models_locales(*models)
