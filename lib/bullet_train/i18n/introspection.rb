@@ -1,7 +1,16 @@
 module BulletTrain::I18n; end
 module BulletTrain::I18n::Introspection
   def translate(key, **options)
-    full_translation_key = extract_full_translation_key_from(key, options) { super(_1, **_2) }
+    # When bundled Ruby gems provide a lot of translations, it can be difficult to figure out which strings in the
+    # application are coming from where. To help with this, you can add `?debug=true` to any URL and we'll output
+    # any rendered strings and their translation keys on the console.
+    if params.present? && (params[:log_locales] || params[:show_locales])
+      begin
+        super(key + "💣", **options.except(:default))
+      rescue I18n::MissingTranslationData => exception
+        full_translation_key = exception.message.rpartition(" ").last.delete("💣")
+      end
+    end
 
     super.tap do |result|
       if params.present?
@@ -15,19 +24,6 @@ module BulletTrain::I18n::Introspection
 
         return full_translation_key if params[:show_locales]
       end
-    end
-
-    private
-
-    # When bundled Ruby gems provide a lot of translations, it can be difficult to figure out which strings in the
-    # application are coming from where. To help with this, you can add `?debug=true` to any URL and we'll output
-    # any rendered strings and their translation keys on the console.
-    def extract_full_translation_key_from(key, options)
-      if params.present? && (params[:log_locales] || params[:show_locales])
-        yield key + "💣", options.except(:default)
-      end
-    rescue I18n::MissingTranslationData => exception
-      exception.message.rpartition(" ").last.delete("💣")
     end
   end
 end
