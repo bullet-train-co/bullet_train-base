@@ -29,7 +29,6 @@ PATH
       microscope
       nice_partials (~> 0.1)
       pagy
-      possessive
       premailer-rails
       rails (>= 6.0.0)
       sidekiq
@@ -228,7 +227,6 @@ GEM
     parser (3.1.2.0)
       ast (~> 2.4.1)
     phonelib (0.7.1)
-    possessive (1.0.1)
     premailer (1.16.0)
       addressable
       css_parser (>= 1.6.0)

@@ -47,9 +47,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "cancancan"
 
-  # We use this to add "'s" as appropriate in certain headings.
-  spec.add_dependency "possessive"
-
   # We've standardized on Sidekiq for background job processing.
   spec.add_dependency "sidekiq"
 
