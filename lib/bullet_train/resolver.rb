@@ -158,12 +158,14 @@ module BulletTrain
           local_package_path = `bundle show #{partial_view_package}`.chomp
           return local_package_path + partial_path_without_package
         else
-          puts "You passed the absolute path for a partial literal, but we couldn't find the package name in the string: #{@needle}".red
+          puts "You passed the absolute path for a partial literal, but we couldn't find the package name in the string:".red
+          puts "`#{@needle}`".red
           puts ""
           puts "Check the string one more time to see if the package name is there."
-          puts "\ti.e.: bullet_train-base/app/views/layouts/devise.html.erb".blue
+          puts "i.e.: bullet_train-base/app/views/layouts/devise.html.erb".blue
+          puts ""
           puts "If you're not sure what the package name is, run `bin/resolve --interactive`, follow the prompt, and pass the annotated path."
-          puts "\ti.e.: <!-- BEGIN /your/local/path/bullet_train-base/app/views/layouts/devise.html.erb -->".blue
+          puts "i.e.: <!-- BEGIN /your/local/path/bullet_train-base/app/views/layouts/devise.html.erb -->".blue
           exit
         end
       end
