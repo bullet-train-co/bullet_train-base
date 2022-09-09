@@ -139,7 +139,9 @@ module BulletTrain
       if @needle.match?(/\.html\.erb$/)
         partial_parts = @needle.split("/")
 
-        if partial_parts.size == 3
+        # TODO: We should probably just default to raising an error if the developer
+        # provides a literal partial string without the name of the package it's coming from.
+        if partial_parts.size <= 3
           # If the string looks something like "shared/attributes/_code.html.erb",
           # all we need to do is change it to "shared/attributes/code"
           partial_parts.last.gsub!(/(_)|(\.html\.erb)/, "")
