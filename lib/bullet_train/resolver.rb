@@ -87,6 +87,18 @@ module BulletTrain
       }
 
       result[:absolute_path] = file_path || class_path || partial_path || locale_path
+
+      # If we get the partial resolver template itself, that means we couldn't find the file.
+      if result[:absolute_path].match?("app/views/bullet_train/partial_resolver.html.erb")
+        puts "We could not find the partial you're looking for: #{@needle}".red
+        puts ""
+        puts "Please try passing the partial string using either of the following two ways:"
+        puts "1. Without underscore and extention: ".blue + "bin/resolve shared/attributes/code"
+        puts "2. Literal path with package name: ".blue + "bin/resolve bullet_train-themes/app/views/themes/base/attributes/_code.html.erb"
+        puts ""
+        exit
+      end
+
       if result[:absolute_path]
         if result[:absolute_path].include?("/bullet_train")
           base_path = "bullet_train" + result[:absolute_path].partition("/bullet_train").last
