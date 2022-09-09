@@ -123,6 +123,39 @@ module BulletTrain
     end
 
     def partial_path
+      # Parse literal partial strings.
+      if @needle.match?(/\.html\.erb$/)
+        partial_parts = @needle.split("/")
+
+        if partial_parts.size == 3
+          # If the string looks something like "shared/attributes/_code.html.erb",
+          # all we need to do is change it to "shared/attributes/code"
+          partial_parts.last.gsub!(/(_)|(\.html\.erb)/, "")
+          @needle = partial_parts.join("/")
+        else
+          # If it's a full path, we need to make sure we're getting it from the right package.
+          unless @needle.match?(/bullet_train\-/)
+            puts "You passed the absolute path for a partial literal, but we couldn't find the package name in the string: #{@needle}".red
+            puts ""
+            puts "Check the string one more time to see if the package name is there."
+            puts "\ti.e.: bullet_train-base/app/views/layouts/devise.html.erb".blue
+            puts "If you're not sure what the package name is, run `bin/resolve --interactive`, follow the prompt, and pass the annotated path."
+            puts "\ti.e.: <!-- BEGIN /your/local/path/bullet_train-base/app/views/layouts/devise.html.erb -->".blue
+            exit
+          else
+            _, partial_view_package, partial_path_without_package = @needle.partition(/bullet_train\-[a-z|\-|_|0-9|\.]*/)
+
+            # Pop off the version so we can call `bundle show` correctly.
+            # Also change `bullet_train-base` to `bullet_train`.
+            partial_view_package.gsub!(/[\-|\.|0-9]*$/, "")if partial_view_package.match?(/[\-|\.|0-9]*$/)
+            partial_view_package.gsub!("-base", "") if @needle.match(/base/)
+
+            local_package_path = `bundle show #{partial_view_package}`.chomp
+            return local_package_path + partial_path_without_package
+          end
+        end
+      end
+
       begin
         annotated_path = ApplicationController.render(template: "bullet_train/partial_resolver", layout: nil, assigns: {needle: @needle}).lines[1].chomp
       rescue ActionView::Template::Error => e
