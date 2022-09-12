@@ -13,7 +13,7 @@ module Account::LocaleHelper
     name = model.label_string.presence
     return {} unless name
 
-    { "#{model.model_name.element}_name": name, "#{model.model_name.collection}_possessive": possessive_string(name) }
+    {"#{model.model_name.element}_name": name, "#{model.model_name.collection}_possessive": possessive_string(name)}
   end
 
   def models_locales(*models)
@@ -35,5 +35,5 @@ module Account::LocaleHelper
   rescue I18n::MissingTranslationData => _
     nil
   end
-  alias ot otranslate
+  alias_method :ot, :otranslate
 end

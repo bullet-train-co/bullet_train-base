@@ -1,4 +1,5 @@
 module BulletTrain::I18n; end
+
 module BulletTrain::I18n::Introspection
   def translate(key, **options)
     return super unless params.present? # Mailers don't have params.
