@@ -1,6 +1,6 @@
 module Account::LocaleHelper
   def current_locale
-    current_user.locale || current_team.locale || "en"
+    current_user&.locale || current_team&.locale || "en"
   end
 
   # as of now, we only calculate a possessive version of nouns in english.
