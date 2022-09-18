@@ -1,6 +1,6 @@
 module Account::TeamsHelper
   def current_team
-    # TODO We do not want this to be based on the `current_team_id`. 
+    # TODO We do not want this to be based on the `current_team_id`.
     # TODO We want this to be based on the current resource being loaded.
     current_user&.current_team
   end
