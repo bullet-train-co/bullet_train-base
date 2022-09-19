@@ -143,12 +143,4 @@ module Controllers::Base
       format.json { render "#{params[:controller].gsub(/^account\//, "api/#{BulletTrain::Api.current_version}/")}/#{params[:action]}" }
     end
   end
-
-  private
-
-  # Although our strong params are being filtered via strong_parameters_from_api,
-  # Rails still requires us to invoke this method in the controller.
-  # Otherwise we will get an ActiveModel::ForbiddenAttributes error.
-  def team_params
-  end
 end

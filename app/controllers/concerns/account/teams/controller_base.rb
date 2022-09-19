@@ -115,6 +115,12 @@ module Account::Teams::ControllerBase
 
   private
 
+  # Although our strong params are being filtered via strong_parameters_from_api,
+  # Rails still requires us to invoke this method in the controller.
+  # Otherwise we will get an ActiveModel::ForbiddenAttributes error.
+  def team_params
+  end
+
   def permitted_fields
     raise "It looks like you've removed `permitted_fields` from your controller. This will break Super Scaffolding."
   end
