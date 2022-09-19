@@ -19,9 +19,7 @@ module Account::Teams::ControllerBase
       @child_object = @team
     end
 
-    private
-
-    include strong_parameters_from_api
+    private_class_method :strong_parameters_from_api
   end
 
   # GET /teams
