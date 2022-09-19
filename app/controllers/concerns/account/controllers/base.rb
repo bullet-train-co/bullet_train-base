@@ -3,7 +3,7 @@ module Account::Controllers::Base
 
   included do
     include LoadsAndAuthorizesResource
-    include Fields::ControllerSupport
+    extend Fields::ControllerSupport
 
     if billing_enabled?
       include Billing::ControllerSupport
@@ -26,10 +26,12 @@ module Account::Controllers::Base
     def regex_to_remove_controller_namespace
       /^Account::/
     end
+  end
 
-    def strong_parameters_from_api
-      (name.gsub(regex_to_remove_controller_namespace, "Api::#{BulletTrain::Api.current_version.upcase}::") + "::StrongParameters").constantize
-    end
+  def strong_parameters_from_api
+    api_module = (self.class.to_s.gsub(/^Account::/, "Api::#{BulletTrain::Api.current_version.upcase}::") + "::StrongParameters").constantize
+    params_method = params["controller"].split("/").last.singularize + "_params"
+    api_module.send(params_method.to_sym, params, permitted_fields, permitted_arrays)
   end
 
   def adding_user_email?

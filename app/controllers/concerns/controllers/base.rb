@@ -39,6 +39,15 @@ module Controllers::Base
     end
   end
 
+  class_methods do
+    # this is a template method called by LoadsAndAuthorizesResource.
+    # it allows that module to understand what namespaces of a controller
+    # are organizing the controllers, and which are organizing the models.
+    def regex_to_remove_controller_namespace
+      /^Account::/
+    end
+  end
+
   # this is an ugly hack, but it's what is recommended at
   # https://github.com/plataformatec/devise/wiki/How-To:-Create-custom-layouts
   def layout_by_resource
@@ -133,5 +142,13 @@ module Controllers::Base
       format.html(&block)
       format.json { render "#{params[:controller].gsub(/^account\//, "api/#{BulletTrain::Api.current_version}/")}/#{params[:action]}" }
     end
+  end
+
+  private
+
+  # Although our strong params are being filtered via strong_parameters_from_api,
+  # Rails still requires us to invoke this method in the controller.
+  # Otherwise we will get an ActiveModel::ForbiddenAttributes error.
+  def team_params
   end
 end

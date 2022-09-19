@@ -19,7 +19,7 @@ module Account::Teams::ControllerBase
       @child_object = @team
     end
 
-    private_class_method :strong_parameters_from_api
+    private :strong_parameters_from_api
   end
 
   # GET /teams
@@ -68,7 +68,7 @@ module Account::Teams::ControllerBase
   # POST /teams
   # POST /teams.json
   def create
-    @team = Team.new(team_params)
+    @team = Team.new(strong_parameters_from_api)
 
     respond_to do |format|
       if @team.save
@@ -93,7 +93,7 @@ module Account::Teams::ControllerBase
   # PATCH/PUT /teams/1.json
   def update
     respond_to do |format|
-      if @team.update(team_params)
+      if @team.update(strong_parameters_from_api)
         format.html { redirect_to [:account, @team], notice: I18n.t("teams.notifications.updated") }
         format.json { render :show, status: :ok, location: [:account, @team] }
       else
