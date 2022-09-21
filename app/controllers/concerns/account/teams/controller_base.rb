@@ -2,6 +2,8 @@ module Account::Teams::ControllerBase
   extend ActiveSupport::Concern
 
   included do
+    include StrongParamsHelper
+
     load_and_authorize_resource :team, class: "Team", prepend: true,
       member_actions: (defined?(MEMBER_ACTIONS) ? MEMBER_ACTIONS : []),
       collection_actions: (defined?(COLLECTION_ACTIONS) ? COLLECTION_ACTIONS : [])

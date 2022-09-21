@@ -5,7 +5,6 @@ module Controllers::Base
     # these are common for authentication workflows.
     include InvitationOnlyHelper
     include InvitationsHelper
-    include StrongParamsHelper
 
     include DeviseCurrentAttributes
     include Pagy::Backend
