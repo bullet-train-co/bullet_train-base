@@ -23,7 +23,7 @@ module Account::Teams::ControllerBase
 
     private
 
-    include StrongParamsHelper.strong_parameters_from_api(self)
+    include StrongParamsHelper.strong_parameters_from_api(self) if defined?(BulletTrain::Api)
   end
 
   # GET /teams
