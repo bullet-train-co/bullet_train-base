@@ -21,7 +21,7 @@ module Account::Teams::ControllerBase
 
     private
 
-    include strong_parameters_from_api
+    include StrongParamsHelper.strong_parameters_from_api(self)
   end
 
   # GET /teams

@@ -5,6 +5,7 @@ module Controllers::Base
     # these are common for authentication workflows.
     include InvitationOnlyHelper
     include InvitationsHelper
+    include StrongParamsHelper
 
     include DeviseCurrentAttributes
     include Pagy::Backend
@@ -36,12 +37,6 @@ module Controllers::Base
           format.html { redirect_to account_teams_url, alert: exception.message }
         end
       end
-    end
-  end
-
-  class_methods do
-    def strong_parameters_from_api
-      (name.gsub(regex_to_remove_controller_namespace, "Api::#{BulletTrain::Api.current_version.upcase}::") + "::StrongParameters").constantize
     end
   end
 
