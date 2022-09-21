@@ -2,6 +2,7 @@ module Account::Teams::ControllerBase
   extend ActiveSupport::Concern
 
   included do
+    include BulletTrain::Api
     include StrongParamsHelper
 
     load_and_authorize_resource :team, class: "Team", prepend: true,
@@ -23,7 +24,7 @@ module Account::Teams::ControllerBase
 
     private
 
-    include StrongParamsHelper.strong_parameters_from_api(self)
+    include StrongParamsHelper.strong_parameters_from_api(self, BulletTrain::Api.current_version)
   end
 
   # GET /teams
