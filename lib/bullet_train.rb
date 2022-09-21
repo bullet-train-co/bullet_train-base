@@ -4,6 +4,7 @@ require "bullet_train/resolver"
 
 require "bullet_train/fields"
 require "bullet_train/roles"
+require "bullet_train/api"
 require "bullet_train/super_load_and_authorize_resource"
 require "bullet_train/has_uuid"
 require "bullet_train/scope_validator"
