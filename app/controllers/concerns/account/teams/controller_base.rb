@@ -1,3 +1,5 @@
+require "bullet_train/api"
+
 module Account::Teams::ControllerBase
   extend ActiveSupport::Concern
 
