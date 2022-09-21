@@ -8,8 +8,6 @@ gem "sqlite3"
 
 gem "sprockets-rails"
 
-gem "bullet_train-api"
-
 # TODO Have to specify this dependency here until our changes are in the original package.
 gem "active_hash", github: "bullet-train-co/active_hash"
 
