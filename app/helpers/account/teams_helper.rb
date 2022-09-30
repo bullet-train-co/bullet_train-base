@@ -1,8 +1,11 @@
 module Account::TeamsHelper
   def current_team
-    # TODO We do not want this to be based on the `current_team_id`.
-    # TODO We want this to be based on the current resource being loaded.
-    current_user&.current_team
+    # load_team populates Current.team in LoadsAndAuthorizesResource.
+    controller.load_team
+
+    # controller.load_team unfortunately returns nil when the action is teams#index,
+    # so we fall back to using `current_user` here if @team or @current_team aren't available.
+    Current.team ||= controller.instance_variable_get(:@team) || controller.instance_variable_get(:@current_team) || current_user&.current_team
   end
 
   def other_teams
