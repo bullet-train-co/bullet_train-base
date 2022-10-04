@@ -26,6 +26,10 @@ module Account::Controllers::Base
     def regex_to_remove_controller_namespace
       /^Account::/
     end
+
+    def strong_parameters_from_api
+      (name.gsub(regex_to_remove_controller_namespace, "Api::#{BulletTrain::Api.current_version.upcase}::") + "::StrongParameters").constantize
+    end
   end
 
   def adding_user_email?
