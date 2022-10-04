@@ -84,7 +84,7 @@ module Records::Base
   if defined?(BulletTrain::Api)
     def to_api_json
       # TODO So many performance improvements available here.
-      controller = "Api::#{BulletTrain::Api.current_version.upcase}::ApplicationController".constantize.new
+      controller = "Api::V#{BulletTrain::Api.current_version_number}::ApplicationController".constantize.new
       # TODO We need to fix host names here.
       controller.request = ActionDispatch::Request.new({})
       local_class_key = self.class.name.underscore.split("/").last.to_sym
