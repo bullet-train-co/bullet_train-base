@@ -39,6 +39,12 @@ module Controllers::Base
     end
   end
 
+  class_methods do
+    def strong_parameters_from_api
+      (name.gsub(regex_to_remove_controller_namespace, "Api::#{BulletTrain::Api.current_version.upcase}::") + "::StrongParameters").constantize
+    end
+  end
+
   # this is an ugly hack, but it's what is recommended at
   # https://github.com/plataformatec/devise/wiki/How-To:-Create-custom-layouts
   def layout_by_resource
