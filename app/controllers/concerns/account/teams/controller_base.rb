@@ -21,7 +21,7 @@ module Account::Teams::ControllerBase
 
     private
 
-    if defined?(BulletTrain::Api)
+    if defined?(Api::V1::ApplicationController)
       include strong_parameters_from_api
     end
   end
