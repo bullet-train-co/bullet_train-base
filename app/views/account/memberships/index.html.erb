@@ -3,7 +3,7 @@
   <% p.content_for :body do %>
     <% if @memberships.current_and_invited.any? %>
       <%= render 'index' do %>
-        <%= render @memberships %>
+        <%= render @memberships.current_and_invited.includes(:user) %>
       <% end %>
     <% end %>
 
