@@ -9,4 +9,5 @@ for BRANCH in $BRANCH_NAMES; do
   fi
 done
 
+echo "Cloning from ${STARTER_REPO_BRANCH}..."
 git clone -b $STARTER_REPO_BRANCH https://github.com/bullet-train-co/bullet_train.git tmp/starter
