@@ -178,7 +178,9 @@ jobs:
     steps:
       - browser-tools/install-browser-tools
       - checkout
-      - run: "git clone https://github.com/bullet-train-co/bullet_train.git tmp/starter"
+      - run:
+          name: Clone Starter Repository for testing
+          command: bash ./.circleci/matching_branch_check
 
       - run:
           name: Link starter repository to the Ruby gem being tested.
