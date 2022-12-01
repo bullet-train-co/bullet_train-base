@@ -151,7 +151,7 @@ module Users::Base
     # The last 16 bytes of the ciphertext are the authentication tag - we use
     # Galois Counter Mode which is an authenticated encryption mode
     cipher_text = raw_cipher_text[0..-17]
-    auth_tag = raw_cipher_text[-16..-1]
+    auth_tag = raw_cipher_text[-16..]
 
     # this alrorithm lifted from
     # https://github.com/attr-encrypted/encryptor/blob/master/lib/encryptor.rb#L54
