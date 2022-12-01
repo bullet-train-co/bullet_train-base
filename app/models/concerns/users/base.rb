@@ -151,7 +151,7 @@ module Users::Base
     # The last 16 bytes of the ciphertext are the authentication tag - we use
     # Galois Counter Mode which is an authenticated encryption mode
     cipher_text = raw_cipher_text[0..-17]
-    auth_tag =  raw_cipher_text[-16..-1]
+    auth_tag = raw_cipher_text[-16..-1]
 
     # this alrorithm lifted from
     # https://github.com/attr-encrypted/encryptor/blob/master/lib/encryptor.rb#L54
@@ -159,7 +159,7 @@ module Users::Base
     # create an OpenSSL object which will decrypt the AES cipher with 256 bit
     # keys in Galois Counter Mode (GCM). See
     # https://ruby.github.io/openssl/OpenSSL/Cipher.html
-    cipher = OpenSSL::Cipher.new('aes-256-gcm')
+    cipher = OpenSSL::Cipher.new("aes-256-gc")
 
     # tell the cipher we want to decrypt. Symmetric algorithms use a very
     # similar process for encryption and decryption, hence the same object can
@@ -184,7 +184,7 @@ module Users::Base
     # http://ruby-doc.org/stdlib-2.0.0/libdoc/openssl/rdoc/OpenSSL/Cipher.html#method-i-auth_data-3D
     # we are not adding any authenticated data but OpenSSL docs say this should
     # still be called.
-    cipher.auth_data = ''
+    cipher.auth_data = ""
 
     # #update is (somewhat confusingly named) the method which actually
     # performs the decryption on the given chunk of data. Our OTP secret is
