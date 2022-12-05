@@ -97,8 +97,7 @@ namespace :bullet_train do
 
     if gem
       details = framework_packages[gem]
-      repo = details[:git]
-      package = repo = details[:git].split("/").last
+      package = details[:git].split("/").last
 
       puts "OK! Let's work on `#{gem}` together!".green
       puts ""
@@ -129,7 +128,7 @@ namespace :bullet_train do
         stream("git #{work_tree_flag} #{git_dir_flag} pull origin main")
       else
         # Use https:// URLs when using this task in Gitpod.
-        stream "git clone #{`whoami`.chomp == "gitpod" ? "https://github.com/" : "git@github.com:"}#{details[:git]}.git local/#{package}"
+        stream "git clone #{(`whoami`.chomp == "gitpod") ? "https://github.com/" : "git@github.com:"}#{details[:git]}.git local/#{package}"
       end
 
       stream("git #{work_tree_flag} #{git_dir_flag} fetch")
@@ -145,8 +144,6 @@ namespace :bullet_train do
 
       glob = if package == "bullet_train-core"
         ", glob: \"#{gem}/#{gem}.gemspec\""
-      else
-        nil
       end
 
       puts ""
@@ -165,7 +162,7 @@ namespace :bullet_train do
         puts "This gem isn't directly present in the `Gemfile`, so we'll add it temporarily.".green
         File.open("Gemfile", "a+") { |file|
           file.puts
-          file.puts "gem \"#{gem}\", path: \"local/#{package}\"#{glob} # Added by \`bin/develop\`."
+          file.puts "gem \"#{gem}\", path: \"local/#{package}\"#{glob} # Added by `bin/develop`."
         }
       end
 
