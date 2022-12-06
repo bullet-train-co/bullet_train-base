@@ -53,5 +53,3 @@ If you're using Bullet Train for the first time, begin by learning these five im
     ```
     <!-- BEGIN /Users/andrewculver/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems/bullet_train-themes-light-1.0.10/app/views/themes/light/commentary/_box.html.erb -->
     ```
-
-## Images
