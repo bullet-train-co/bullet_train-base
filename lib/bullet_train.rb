@@ -101,7 +101,7 @@ def cloudinary_enabled?
 end
 
 def two_factor_authentication_enabled?
-  ENV["TWO_FACTOR_ENCRYPTION_KEY"].present?
+  ENV["TWO_FACTOR_ENABLED"].present?
 end
 
 # Don't redefine this if an application redefines it locally.
