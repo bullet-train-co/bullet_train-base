@@ -13,6 +13,4 @@ gem "rqrcode"
 
 If you haven't already done so, set the environment variable `RAILS_MASTER_KEY` with the contents of `config/master.key`. Note, this file should not be committed to git, and you should keep it in a safe place.
 
-Now in the user settings page there will be an option to enable two factor, and when enabled it will be required at login.
-
-
+Now in the user's Account Details page there will be an option to enable two factor, and when enabled the two factor code will be required at login.
