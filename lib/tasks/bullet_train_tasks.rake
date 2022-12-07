@@ -87,8 +87,8 @@ namespace :bullet_train do
       flags_with_values = []
 
       arguments[:all_options].split(/\s+/).each do |option|
-        if option.match?(/^\-\-/)
-          flags_with_values << {flag: option.gsub(/^\-\-/, "").to_sym, values: []}
+        if option.match?(/^--/)
+          flags_with_values << {flag: option.gsub(/^--/, "").to_sym, values: []}
         else
           flags_with_values.last[:values] << option
         end
@@ -125,8 +125,8 @@ namespace :bullet_train do
               line
             end
 
-            File.open("./Gemfile", "w+") {|file| file.write(new_lines.join)}
-            system 'bundle install'
+            File.write("./Gemfile", new_lines.join)
+            system "bundle install"
           end
         end
 
