@@ -14,6 +14,7 @@ The helper methods below can also be directly invoked in your application if you
 | INVITATION_KEYS | String | `"ofr9h5h9ghzeodh, ofr9h5h9ghzeodi"` | `invitation_keys` `invitation_only?` |
 | FONTAWESOME_NPM_AUTH_TOKEN | String | `"your_font_awesome_token"` | `font_awesome?` |
 | SILENCE_LOGS | Boolean | `"true"` | `silence_logs?` |
+| TESTING_PROVISION_KEY | String | `"asdf123"` | N/A |
 
 | Option | Description |
 | --- | --- |
@@ -25,3 +26,4 @@ The helper methods below can also be directly invoked in your application if you
 | INVITATION_KEYS | See more [Invitation Only](/docs/invitation_only.md) for more information. |
 | FONTAWESOME_NPM_AUTH_TOKEN | Enables use of Font Awesome. |
 | SILENCE_LOGS | Silences Super Scaffolding logs. |
+| TESTING_PROVISION_KEY | Creates a test `Platform::Application` by accessing `/testing/provision?key=your_provision_key` |
