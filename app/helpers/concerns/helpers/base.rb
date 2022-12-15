@@ -1,5 +1,4 @@
 module Helpers::Base
-  include Helpers::Api
   include Pagy::Frontend
   include Pagy::Backend
 
